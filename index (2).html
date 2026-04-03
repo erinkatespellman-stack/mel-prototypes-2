@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEL Prototypes — Harpin × Marriott</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f5f4f1;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .top-bar {
+      background: #2b2b2b;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 10px;
+    }
+    .adobe-logo {
+      width: 26px; height: 26px;
+      background: #fa0f00;
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 11px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .top-bar-label { color: rgba(255,255,255,0.7); font-size: 13px; }
+
+    .main {
+      flex: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 64px 24px 80px;
+      width: 100%;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #6b6b6b;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 34px;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #6b6b6b;
+      line-height: 1.65;
+      max-width: 560px;
+      margin-bottom: 52px;
+    }
+
+    .cards { display: flex; flex-direction: column; gap: 16px; }
+
+    .card {
+      background: white;
+      border: 1px solid #e0dedd;
+      border-radius: 8px;
+      padding: 28px 28px 26px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 28px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.18s, transform 0.18s;
+      cursor: pointer;
+    }
+    .card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.09);
+      transform: translateY(-2px);
+    }
+
+    .card-left { flex: 1; }
+
+    .card-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 9px;
+      border-radius: 3px;
+      margin-bottom: 14px;
+    }
+    .badge-uc1 { background: #1473e6; color: white; }
+    .badge-uc2 { background: #b05c0a; color: white; }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.018em;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: #5a5a5a;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .card-steps {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .step {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 10px;
+      background: #f5f4f1;
+      border: 1px solid #e0dedd;
+      border-radius: 3px;
+      color: #6b6b6b;
+    }
+
+    .card-cta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .cta-circle {
+      width: 40px; height: 40px;
+      background: #1a1a1a;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .card:hover .cta-circle { background: #1473e6; }
+    .cta-circle svg {
+      width: 15px; height: 15px;
+      fill: none; stroke: white;
+      stroke-width: 2.5;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .cta-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #a8a8a8;
+      white-space: nowrap;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #e0dedd;
+      margin: 48px 0 36px;
+    }
+
+    .context-label {
+      font-size: 12px;
+      color: #a8a8a8;
+      line-height: 1.6;
+    }
+    .context-label strong { color: #6b6b6b; font-weight: 500; }
+
+    footer {
+      padding: 20px 24px;
+      text-align: center;
+      font-size: 12px;
+      color: #a8a8a8;
+      border-top: 1px solid #e0dedd;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 26px; }
+      .main { padding: 40px 20px 60px; }
+      .card { flex-direction: column; gap: 20px; }
+      .card-cta { flex-direction: row; align-self: flex-start; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="adobe-logo">A</div>
+  <span class="top-bar-label">Adobe Experience Cloud — MEL Prototypes</span>
+</div>
+
+<div class="main">
+
+  <div class="eyebrow">Harpin × Marriott · Work in Progress</div>
+  <h1>Marriott Experience Layer</h1>
+  <p class="subtitle">Interactive prototypes exploring how property-level marketers create personalized guest communications using a shared content library. Select a use case to begin.</p>
+
+  <div class="cards">
+
+    <!-- Part 1: Amenity -->
+    <a class="card" href="mel-amenity-flow-demo.html">
+      <div class="card-left">
+        <span class="card-badge badge-uc2">Part 1 of 2</span>
+        <div class="card-title">Building the Content Library</div>
+        <p class="card-desc">Before Mary can personalize an email, she needs the right content in her library. She creates a new amenity for group business travelers — giving it a name, a description, and conditions for who should see it and when. Once saved, it's ready to be pulled into any channel automatically.</p>
+        <div class="card-steps">
+          <span class="step">Amenity library</span>
+          <span class="step">AI-assisted creation</span>
+          <span class="step">Plain-English conditions</span>
+          <span class="step">Cross-channel reuse</span>
+        </div>
+      </div>
+      <div class="card-cta">
+        <div class="cta-circle">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <span class="cta-label">Start here</span>
+      </div>
+    </a>
+
+    <!-- Part 2: Email -->
+    <a class="card" href="mel-new-version-flow-demo.html">
+      <div class="card-left">
+        <span class="card-badge badge-uc1">Part 2 of 2</span>
+        <div class="card-title">Creating a Personalized Email Version</div>
+        <p class="card-desc">With the amenity in the library, Mary creates a pre-arrival email version for group business travelers. The system assembles the right content automatically — including the amenity she just built — and fills any gaps with defaults. Switch to the Leisure persona to see how the same library produces a completely different email.</p>
+        <div class="card-steps">
+          <span class="step">Content library</span>
+          <span class="step">Conversational setup</span>
+          <span class="step">AI content matching</span>
+          <span class="step">Persona comparison</span>
+        </div>
+      </div>
+      <div class="card-cta">
+        <div class="cta-circle">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <span class="cta-label">Then this</span>
+      </div>
+    </a>
+
+  </div>
+
+  <hr class="divider">
+
+  <p class="context-label">
+    <strong>Persona:</strong> Mary Marketer — property marketer at JW Marriott Houston Downtown (HWSJW).<br>
+    <strong>Platform:</strong> MEL (Marriott Experience Layer), built on Adobe Experience Cloud.<br>
+    <strong>Status:</strong> Concept prototype for stakeholder review. Not connected to live data.
+  </p>
+
+</div>
+
+<footer>Harpin × Marriott · MEL Prototypes · For internal review only</footer>
+
+</body>
+</html>

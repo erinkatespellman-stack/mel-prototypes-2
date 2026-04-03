@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEL — Create New Version (Demo)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --adobe-bar: #2b2b2b;
+      --accent: #1473e6;
+      --accent-bg: #e8f3ff;
+      --green: #2d7d45;
+      --green-bg: #e6f4eb;
+      --amber: #b05c0a;
+      --amber-bg: #fdf0e2;
+      --text: #1a1a1a;
+      --text-light: #6b6b6b;
+      --text-faint: #a8a8a8;
+      --border: #e0dedd;
+      --bg: #ffffff;
+      --bg-soft: #f5f4f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== CHROME ===== */
+    .adobe-bar {
+      background: var(--adobe-bar);
+      height: 44px;
+      display: flex; align-items: center;
+      padding: 0 16px;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      transition: padding-left 0.25s ease;
+    }
+    .adobe-brand { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.9); font-size: 14px; }
+    .adobe-logo { width: 28px; height: 28px; background: #fa0f00; border-radius: 3px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 700; }
+    .adobe-icons { display: flex; align-items: center; gap: 14px; }
+    .user-avatar { width: 28px; height: 28px; background: #2d7d45; border-radius: 50%; color: white; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+    .marriott-bar {
+      background: var(--bg); height: 52px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 24px; justify-content: space-between;
+      position: sticky; top: 44px; z-index: 100;
+      transition: padding-left 0.25s ease;
+    }
+    .m-lockup { display: flex; align-items: center; gap: 10px; }
+    .m-logo { width: 30px; height: 30px; background: var(--text); border-radius: 3px; color: white; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .property-name { font-size: 14px; font-weight: 500; }
+
+    /* ===== LAYOUT ===== */
+    .page-layout {
+      display: flex;
+      min-height: calc(100vh - 96px);
+    }
+
+    /* ===== STORY PANEL ===== */
+    .story-panel {
+      width: 224px;
+      flex-shrink: 0;
+      background: #eff6ff;
+      border-right: 1px solid #bfdbfe;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 96px;
+      height: calc(100vh - 96px);
+      overflow-y: auto;
+    }
+    .main-content { flex: 1; min-width: 0; }
+    .sp-header { padding: 14px 16px 10px; border-bottom: 1px solid #bfdbfe; flex-shrink: 0; }
+    .sp-flow-label {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      background: #1473e6; color: white; padding: 2px 8px; border-radius: 3px; margin-bottom: 8px;
+    }
+    .sp-step { font-size: 11px; font-weight: 600; color: #2563eb; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .sp-title { font-size: 13px; font-weight: 700; color: #1e3a5f; line-height: 1.4; }
+    .sp-body { padding: 14px 16px; overflow-y: auto; flex: 1; }
+    .sp-narrative { font-size: 12px; color: #374151; line-height: 1.65; margin-bottom: 14px; }
+    .sp-callouts { display: flex; flex-direction: column; gap: 10px; }
+    .sp-callout { display: flex; gap: 8px; align-items: flex-start; }
+    .sp-letter { width: 18px; height: 18px; background: #3b82f6; color: white; border-radius: 50%; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .sp-callout-text { font-size: 11.5px; color: #374151; line-height: 1.55; }
+    .sp-callout-text strong { color: #1e3a5f; font-weight: 600; }
+    .sp-next {
+      margin-top: 14px; padding: 10px 12px;
+      background: rgba(59,130,246,0.08); border: 1px solid #bfdbfe;
+      border-radius: 5px; font-size: 11.5px; color: #374151; line-height: 1.5;
+    }
+    .sp-next strong { color: #2563eb; font-weight: 600; }
+    .sp-footer { padding: 10px 16px 14px; border-top: 1px solid #bfdbfe; flex-shrink: 0; }
+    .sp-dots { display: flex; gap: 5px; align-items: center; margin-bottom: 6px; }
+    .sp-dot { width: 8px; height: 8px; border-radius: 50%; background: #bfdbfe; cursor: pointer; transition: background 0.15s; }
+    .sp-dot.active { background: #3b82f6; }
+    .sp-dot.done { background: #1d4ed8; }
+    .sp-nav { font-size: 10px; color: #2563eb; font-weight: 500; letter-spacing: 0.04em; }
+    @media (max-width: 960px) { .story-panel { display: none; } }
+
+    /* ===== SCREENS ===== */
+    .screen { display: none; }
+    .screen.active { display: block; animation: fadeUp 0.3s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ===== LIBRARY ===== */
+    .library-wrap { padding: 32px 40px 80px; max-width: 980px; }
+    .page-title { font-size: 26px; font-weight: 600; letter-spacing: -0.025em; margin-bottom: 4px; }
+    .page-title .code { color: var(--text-light); font-weight: 400; }
+    .change-prop { color: var(--accent); font-size: 13px; cursor: pointer; text-decoration: none; }
+    .filter-row { display: flex; align-items: center; gap: 10px; margin: 24px 0 20px; }
+    .search-input { display: flex; align-items: center; gap: 7px; border: 1px solid var(--border); border-radius: 4px; padding: 7px 12px; width: 210px; color: var(--text-faint); font-size: 13px; }
+    .filter-pills { display: flex; gap: 6px; }
+    .pill { padding: 5px 14px; border: 1px solid var(--border); border-radius: 20px; font-size: 12px; cursor: pointer; background: var(--bg); color: var(--text-light); }
+    .pill.on { background: var(--text); color: white; border-color: var(--text); }
+    .section-head { display: flex; align-items: center; gap: 8px; padding: 8px 0; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .section-label { font-size: 11px; font-weight: 500; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; }
+    .section-pill { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: var(--accent); color: white; }
+    .cards-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 36px; }
+    .card { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--bg); }
+    .card.featured { border-color: var(--accent); border-width: 1.5px; }
+    .card-thumb { height: 96px; }
+    .thumb-warm { background: linear-gradient(145deg, #b09070 0%, #7d5c3a 100%); }
+    .thumb-teal { background: linear-gradient(145deg, #5d8a8c 0%, #3a6264 100%); }
+    .thumb-slate { background: linear-gradient(145deg, #8a98aa 0%, #5c6a7a 100%); }
+    .thumb-navy { background: linear-gradient(145deg, #263350 0%, #151e35 100%); }
+    .thumb-fgrn { background: linear-gradient(145deg, #1e4d38 0%, #0f2e20 100%); }
+    .thumb-rust { background: linear-gradient(145deg, #6b2a0e 0%, #3e1508 100%); }
+    .thumb-wapp { background: linear-gradient(145deg, #3b7a57 0%, #1e4d35 100%); }
+    .thumb-push { background: linear-gradient(145deg, #435e7a 0%, #263850 100%); }
+    .card-body { padding: 14px 14px 16px; }
+    .card-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 500; margin-bottom: 8px; }
+    .badge.active { background: var(--green-bg); color: var(--green); }
+    .badge.inactive { background: var(--bg-soft); color: var(--text-light); }
+    .badge.new-ch { background: #dceeff; color: var(--accent); }
+    .badge.avail { background: var(--green-bg); color: var(--green); }
+    .badge.coming { background: var(--bg-soft); color: var(--text-faint); border: 1px solid var(--border); }
+    .card-meta { font-size: 12px; color: var(--text-light); line-height: 1.65; }
+    .card-sub-meta { font-size: 12px; color: var(--text-faint); margin-top: 2px; font-style: italic; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0; }
+    .content-tag { font-size: 11px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 3px; padding: 2px 8px; color: var(--text-light); }
+    .reuse-sym { color: var(--amber); }
+    .btn { display: block; width: 100%; text-align: center; padding: 8px 14px; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 6px; border: 1px solid transparent; }
+    .btn-new-ver { background: var(--accent); color: white; border-color: var(--accent); }
+    .btn-new-ver:hover { background: #1165cc; }
+    .btn-manage { background: transparent; color: var(--accent); border-color: var(--border); }
+    .btn-manage:hover { background: var(--accent-bg); }
+    .btn-dim { background: transparent; color: var(--text-faint); border-color: var(--border); cursor: not-allowed; }
+    .btn-get-started-blue { background: var(--accent); color: white; border-color: var(--accent); }
+    .btn-get-started-green { background: #1a4d35; color: white; border-color: #1a4d35; }
+    .btn-explore { background: transparent; color: var(--amber); border-color: var(--amber); }
+    .btn-coming-soon { background: transparent; color: var(--text-faint); border-color: var(--border); cursor: default; }
+
+    /* ===== CHAT ===== */
+    .chat-wrap { max-width: 660px; margin: 0 auto; padding: 32px 24px 100px; }
+    .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-light); margin-bottom: 28px; }
+    .breadcrumb a { color: var(--accent); cursor: pointer; text-decoration: none; }
+    .breadcrumb .sep { color: var(--text-faint); }
+    .breadcrumb .curr { color: var(--text); font-weight: 500; }
+    .context-strip { display: flex; align-items: center; gap: 12px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin-bottom: 36px; }
+    .context-icon { width: 34px; height: 34px; background: var(--text); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .context-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+    .context-name { font-size: 14px; font-weight: 500; }
+    .thread { display: flex; flex-direction: column; gap: 14px; }
+    .msg { max-width: 80%; animation: msgIn 0.22s ease; }
+    @keyframes msgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .msg.sys { align-self: flex-start; }
+    .msg.usr { align-self: flex-end; }
+    .bubble { padding: 11px 16px; border-radius: 8px; font-size: 15px; line-height: 1.6; }
+    .msg.sys .bubble { background: var(--bg-soft); border: 1px solid var(--border); }
+    .msg.usr .bubble { background: var(--text); color: white; }
+    .chips-row { display: flex; flex-wrap: wrap; gap: 8px; animation: msgIn 0.22s ease; }
+    .chip { padding: 8px 20px; border: 1px solid var(--border); border-radius: 20px; font-size: 14px; cursor: pointer; background: var(--bg); transition: background 0.12s; }
+    .chip:hover { background: var(--bg-soft); border-color: #aaa; }
+    .build-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--text); color: white; border: none; padding: 13px 28px; border-radius: 6px; font-size: 15px; font-weight: 500; cursor: pointer; animation: msgIn 0.28s ease; }
+    .build-btn:hover { background: #333; }
+
+    /* ===== ANALYZING ===== */
+    .analyzing-wrap { max-width: 520px; margin: 0 auto; padding: 64px 24px 80px; text-align: center; }
+    .analyzing-title { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .analyzing-sub { font-size: 15px; color: var(--text-light); margin-bottom: 36px; }
+    .steps-box { text-align: left; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 20px; }
+    .step-row { display: flex; align-items: center; gap: 12px; padding: 13px 18px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text-faint); opacity: 0; transition: opacity 0.3s, color 0.3s; }
+    .step-row:last-child { border-bottom: none; }
+    .step-row.vis { opacity: 1; color: var(--text-light); }
+    .step-row.done-row { color: var(--text); }
+    .step-icon { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .step-icon.spin { border-color: var(--accent) transparent; animation: spin 0.75s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .step-icon.done { background: var(--green); border-color: var(--green); }
+    .summary-box { text-align: left; border: 1px solid var(--border); border-radius: 8px; padding: 20px 22px; margin-bottom: 28px; opacity: 0; transform: translateY(8px); transition: opacity 0.4s, transform 0.4s; }
+    .summary-box.vis { opacity: 1; transform: translateY(0); }
+    .summary-eyebrow { font-size: 11px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+    .summary-text { font-size: 14px; line-height: 1.7; margin-bottom: 14px; }
+    .block-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .btag { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 3px; }
+    .btag.grp { background: var(--accent-bg); color: var(--accent); }
+    .btag.def { background: var(--amber-bg); color: var(--amber); }
+    .btag.std { background: var(--bg-soft); color: var(--text-light); border: 1px solid var(--border); }
+    .view-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--text); color: white; border: none; padding: 13px 28px; border-radius: 6px; font-size: 15px; font-weight: 500; cursor: pointer; opacity: 0; transition: opacity 0.4s; }
+    .view-btn.vis { opacity: 1; }
+    .view-btn:hover { background: #333; }
+
+    /* ===== EMAIL PREVIEW ===== */
+    .preview-bg { background: var(--bg-soft); min-height: calc(100vh - 96px); padding: 32px 0 80px; }
+    .preview-toolbar { max-width: 640px; margin: 0 auto 16px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .preview-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+    .preview-name { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+    .anno-toggle { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-light); cursor: pointer; user-select: none; }
+    .toggle-track { width: 34px; height: 18px; border-radius: 9px; background: var(--text); position: relative; transition: background 0.2s; }
+    .toggle-track::after { content: ''; position: absolute; width: 12px; height: 12px; background: white; border-radius: 50%; top: 3px; right: 3px; transition: transform 0.2s; }
+    .toggle-track.off { background: var(--border); }
+    .toggle-track.off::after { transform: translateX(-16px); }
+
+    /* Persona tabs */
+    .persona-tabs { max-width: 640px; margin: 0 auto 16px; padding: 0 20px; }
+    .tab-bar { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 3px; gap: 3px; }
+    .tab-btn { flex: 1; padding: 8px 14px; border: none; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+    .tab-btn.active { background: var(--text); color: white; }
+    .tab-btn.inactive { background: transparent; color: var(--text-light); }
+    .persona-context { margin-top: 10px; font-size: 12px; color: var(--text-light); padding: 0 2px; }
+
+    /* Email frame */
+    .email-frame { max-width: 600px; margin: 0 auto; background: white; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; box-shadow: 0 2px 20px rgba(0,0,0,0.07); transition: opacity 0.25s, transform 0.25s; }
+    .eblock { position: relative; }
+    .bbadge { position: absolute; top: 8px; right: 8px; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.03em; z-index: 2; }
+    .bbadge.grp { background: var(--accent-bg); color: var(--accent); border: 1px solid rgba(20,115,230,0.2); }
+    .bbadge.def { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(176,92,10,0.2); }
+    .bbadge.std { background: rgba(0,0,0,0.05); color: var(--text-faint); }
+    .annos-off .bbadge { display: none; }
+    .e-header { background: #181818; padding: 14px 24px; display: flex; align-items: center; gap: 10px; }
+    .e-m { width: 26px; height: 26px; background: white; border-radius: 3px; font-size: 13px; font-weight: 700; color: #181818; display: flex; align-items: center; justify-content: center; }
+    .e-hotel-name { color: rgba(255,255,255,0.8); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+    .e-hero { height: 220px; display: flex; align-items: flex-end; padding: 24px 28px; transition: background 0.3s; }
+    .e-hero-text h2 { font-size: 24px; font-weight: 600; color: white; letter-spacing: -0.02em; margin-bottom: 4px; }
+    .e-hero-text p { font-size: 13px; color: rgba(255,255,255,0.75); }
+    .e-intro { padding: 24px 28px; border-bottom: 1px solid var(--border); }
+    .e-intro p { font-size: 14px; color: var(--text-light); line-height: 1.75; }
+    .e-amenities { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .e-amenity { padding: 20px 18px 22px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); position: relative; }
+    .e-amenity:last-child { border-right: none; }
+    .a-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .a-desc { font-size: 12px; color: var(--text-light); line-height: 1.55; }
+    .e-cta { padding: 28px; text-align: center; border-bottom: 1px solid var(--border); }
+    .e-cta-btn { display: inline-block; background: var(--text); color: white; padding: 11px 32px; border-radius: 3px; font-size: 13px; font-weight: 500; letter-spacing: 0.03em; cursor: pointer; }
+    .e-footer { padding: 18px 28px; background: var(--bg-soft); }
+    .e-footer p { font-size: 11px; color: var(--text-faint); text-align: center; line-height: 1.7; }
+    .e-footer .flink { color: var(--accent); cursor: pointer; }
+
+    /* Exit bar */
+    .exit-bar { max-width: 600px; margin: 20px auto 0; padding: 0 20px; display: flex; justify-content: flex-end; gap: 10px; }
+    .exit-back { background: transparent; color: var(--text-light); border: 1px solid var(--border); padding: 9px 18px; border-radius: 4px; font-size: 13px; cursor: pointer; }
+    .exit-back:hover { background: var(--bg-soft); }
+    .exit-fwd { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: white; border: none; padding: 9px 20px; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; }
+    .exit-fwd:hover { background: #1165cc; }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: white; padding: 11px 22px; border-radius: 6px; font-size: 14px; display: flex; align-items: center; gap: 8px; opacity: 0; pointer-events: none; transition: opacity 0.25s, transform 0.25s; z-index: 999; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* Responsive */
+    @media (min-width: 1440px) { .library-wrap { max-width: 1320px; padding: 40px 60px 100px; } .cards-row { gap: 20px; } }
+    @media (min-width: 1920px) { .library-wrap { max-width: 1700px; padding: 48px 80px 120px; } }
+    @media (max-width: 960px) { .library-wrap { padding: 28px 28px 80px; } .cards-row { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .library-wrap { padding: 20px 16px 60px; } .cards-row { grid-template-columns: 1fr; } .e-amenities { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<!-- CHROME -->
+<div class="adobe-bar">
+  <div class="adobe-brand">
+    <div class="adobe-logo">A</div>
+    Adobe Experience Cloud
+  </div>
+  <div class="adobe-icons">
+    <a href="index.html" title="Back to prototypes" style="display:flex;align-items:center;color:rgba(255,255,255,0.55);transition:color 0.15s;" onmouseover="this.style.color='rgba(255,255,255,0.9)'" onmouseout="this.style.color='rgba(255,255,255,0.55)'">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </a>
+    <svg width="17" height="17" fill="rgba(255,255,255,0.5)" viewBox="0 0 18 18"><rect x="1" y="1" width="4" height="4" rx="1"/><rect x="7" y="1" width="4" height="4" rx="1"/><rect x="13" y="1" width="4" height="4" rx="1"/><rect x="1" y="7" width="4" height="4" rx="1"/><rect x="7" y="7" width="4" height="4" rx="1"/><rect x="13" y="7" width="4" height="4" rx="1"/><rect x="1" y="13" width="4" height="4" rx="1"/><rect x="7" y="13" width="4" height="4" rx="1"/><rect x="13" y="13" width="4" height="4" rx="1"/></svg>
+    <svg width="17" height="17" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+    <div class="user-avatar">MM</div>
+  </div>
+</div>
+<div class="marriott-bar">
+  <div class="m-lockup">
+    <div class="m-logo">M</div>
+    <span class="property-name">JW Marriott Houston Downtown</span>
+  </div>
+</div>
+
+<div class="page-layout">
+
+  <!-- STORY PANEL -->
+  <div class="story-panel" id="story-panel">
+    <div class="sp-header">
+      <div class="sp-flow-label">Part 2 of 2</div>
+      <div class="sp-step" id="sp-step">Step 1 of 4</div>
+      <div class="sp-title" id="sp-title">Mary starts in the content library</div>
+    </div>
+    <div class="sp-body">
+      <div class="sp-narrative" id="sp-narrative"></div>
+      <div class="sp-callouts" id="sp-callouts"></div>
+    </div>
+    <div class="sp-footer">
+      <div class="sp-dots" id="sp-dots">
+        <div class="sp-dot active" onclick="spGoTo(0)"></div>
+        <div class="sp-dot" onclick="spGoTo(1)"></div>
+        <div class="sp-dot" onclick="spGoTo(2)"></div>
+        <div class="sp-dot" onclick="spGoTo(3)"></div>
+      </div>
+      <div class="sp-nav">LIBRARY · CHAT · ANALYSIS · PREVIEW</div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+<!-- SCREEN 1: LIBRARY -->
+<div id="screen-library" class="screen active">
+  <div class="library-wrap">
+    <h1 class="page-title">Library for JW Marriott Houston <span class="code">(HWSJW)</span></h1>
+    <a class="change-prop">Change Property ↓</a>
+    <div class="filter-row">
+      <div class="search-input">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        Search by name...
+      </div>
+      <div class="filter-pills">
+        <span class="pill">Show All (14)</span>
+        <span class="pill on">× Active (5)</span>
+        <span class="pill">Inactive (4)</span>
+        <span class="pill">Expired (5)</span>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <span style="font-size:11px;color:var(--text-faint);">▲</span>
+      <span class="section-label">Guest Touchpoints</span>
+    </div>
+    <div class="cards-row">
+      <div class="card featured">
+        <div class="card-thumb thumb-warm"></div>
+        <div class="card-body">
+          <div class="card-name">Pre-Arrival Email</div>
+          <span class="badge active"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg> Active</span>
+          <div class="card-meta">Active since Jan 1, 2025<br>Draft edits last saved on Apr 18, 2025</div>
+          <div class="tag-row">
+            <span class="content-tag"><span class="reuse-sym">⟲</span> Hero → Lobby Screens</span>
+            <span class="content-tag"><span class="reuse-sym">⟲</span> Amenities → Lobby Screens</span>
+          </div>
+          <button class="btn btn-new-ver" onclick="goToChat()">+ Create New Version</button>
+          <button class="btn btn-manage">Manage</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-thumb thumb-teal"></div>
+        <div class="card-body">
+          <div class="card-name">Travel Planner</div>
+          <span class="badge active"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg> Active</span>
+          <div class="card-meta">Active since Jan 1, 2025<br>Draft edits last saved on Apr 18, 2025</div>
+          <div style="height:32px;"></div>
+          <button class="btn btn-manage" style="margin-top:2px;">Manage</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-thumb thumb-slate"></div>
+        <div class="card-body">
+          <div class="card-name">Day-Of Welcome</div>
+          <span class="badge inactive">Inactive</span>
+          <div class="card-meta">Last active Dec 2024<br>No draft edits</div>
+          <div style="height:32px;"></div>
+          <button class="btn btn-dim" disabled style="margin-top:2px;">Manage</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <span style="font-size:11px;color:var(--text-faint);">▲</span>
+      <span class="section-label">New Guest Comms Channels</span>
+      <span class="section-pill">3 New</span>
+    </div>
+    <div class="cards-row">
+      <div class="card">
+        <div class="card-thumb thumb-navy"></div>
+        <div class="card-body">
+          <div class="card-name">Lobby Screens</div>
+          <span class="badge new-ch">New Channel</span>
+          <div class="card-meta">Connected Apr 2025</div>
+          <div class="card-meta" style="margin-top:6px;">AI playlist ready from your existing content — including Business Traveler blocks</div>
+          <button class="btn btn-get-started-blue" style="margin-top:12px;">Get started →</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-thumb thumb-fgrn"></div>
+        <div class="card-body">
+          <div class="card-name">GRE Screens</div>
+          <span class="badge new-ch">New Channel</span>
+          <div class="card-meta">Connected Apr 2025</div>
+          <div class="card-meta" style="margin-top:6px;">Guest Relations desk screens — check-in info, upgrades, amenity highlights</div>
+          <button class="btn btn-get-started-green" style="margin-top:12px;">Get started →</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-thumb thumb-rust"></div>
+        <div class="card-body">
+          <div class="card-name">Outbound Marketing</div>
+          <span class="badge avail">Available</span>
+          <div class="card-meta">Reach potential Business Travelers</div>
+          <div class="card-meta" style="margin-top:6px;">Requires regional approval before sending</div>
+          <button class="btn btn-explore" style="margin-top:12px;">Explore →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <span style="font-size:11px;color:var(--text-faint);">▲</span>
+      <span class="section-label">Direct Messaging &amp; Push Notifications</span>
+    </div>
+    <div class="cards-row">
+      <div class="card">
+        <div class="card-thumb thumb-wapp"></div>
+        <div class="card-body">
+          <div class="card-name">WhatsApp</div>
+          <span class="badge coming">Coming Soon</span>
+          <div class="card-meta">Guest messaging for check-in, upgrades &amp; requests</div>
+          <div class="card-sub-meta" style="margin-top:4px;">Direct-to-guest channel — Leigh Initiative</div>
+          <button class="btn btn-coming-soon" disabled style="margin-top:12px;">Coming Soon</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-thumb thumb-push"></div>
+        <div class="card-body">
+          <div class="card-name">Push Notifications</div>
+          <span class="badge coming">Coming Soon</span>
+          <div class="card-meta">Mobile app notifications for Bonvoy members</div>
+          <div class="card-sub-meta" style="margin-top:4px;">Real-time push — Marriott Bonvoy app</div>
+          <button class="btn btn-coming-soon" disabled style="margin-top:12px;">Coming Soon</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: CHAT -->
+<div id="screen-chat" class="screen">
+  <div class="chat-wrap">
+    <div class="breadcrumb">
+      <a onclick="showScreen('screen-library')">← Library</a>
+      <span class="sep">/</span>
+      <span class="curr">New Version — Pre-Arrival Email</span>
+    </div>
+    <div class="context-strip">
+      <div class="context-icon">
+        <svg width="16" height="16" fill="white" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      </div>
+      <div>
+        <div class="context-label">Creating a new version of</div>
+        <div class="context-name">Pre-Arrival Email — JW Marriott Houston Downtown</div>
+      </div>
+    </div>
+    <div class="thread" id="thread"></div>
+  </div>
+</div>
+
+<!-- SCREEN 3: ANALYZING -->
+<div id="screen-analyzing" class="screen">
+  <div class="analyzing-wrap">
+    <div class="analyzing-title">Building your email</div>
+    <div class="analyzing-sub">Searching your content library for matching blocks</div>
+    <div class="steps-box">
+      <div class="step-row" id="s1"><div class="step-icon" id="si1"></div><span>Identifying persona: Group Business Traveler</span></div>
+      <div class="step-row" id="s2"><div class="step-icon" id="si2"></div><span>Searching for group hero image</span></div>
+      <div class="step-row" id="s3"><div class="step-icon" id="si3"></div><span>Matching amenity blocks to group profile</span></div>
+      <div class="step-row" id="s4"><div class="step-icon" id="si4"></div><span>Filling in defaults for remaining slots</span></div>
+    </div>
+    <div class="summary-box" id="summary-box">
+      <div class="summary-eyebrow">What I found</div>
+      <p class="summary-text">Your library has 3 group-specific amenity blocks — including the <strong>Executive Meeting Package</strong> you just created. I filled the remaining slot with a default amenity to complete the row.</p>
+      <div class="block-tags">
+        <span class="btag grp">Group Hero Image</span>
+        <span class="btag std">Greeting Text</span>
+        <span class="btag grp">Executive Meeting Package ✦ New</span>
+        <span class="btag grp">Group Dining Package</span>
+        <span class="btag def">Spa &amp; Wellness (Default)</span>
+        <span class="btag std">CTA + Footer</span>
+      </div>
+    </div>
+    <button class="view-btn" id="view-btn" onclick="showScreen('screen-email')">
+      View your email
+      <svg width="15" height="15" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- SCREEN 4: EMAIL PREVIEW -->
+<div id="screen-email" class="screen">
+  <div class="preview-bg">
+    <div class="preview-toolbar">
+      <div>
+        <div class="preview-label">Email Preview</div>
+        <div class="preview-name">Pre-Arrival — Persona Comparison</div>
+      </div>
+      <div class="anno-toggle" onclick="toggleAnnos()">
+        <span id="anno-label">Block annotations on</span>
+        <div class="toggle-track" id="anno-track"></div>
+      </div>
+    </div>
+
+    <div class="persona-tabs">
+      <div class="tab-bar">
+        <button id="tab-group" class="tab-btn active" onclick="switchPersona('group')">Group Business Traveler</button>
+        <button id="tab-leisure" class="tab-btn inactive" onclick="switchPersona('leisure')">Leisure Traveler</button>
+      </div>
+      <div class="persona-context" id="persona-context">Same content library — different blocks surfaced based on guest profile.</div>
+    </div>
+
+    <div class="email-frame" id="email-frame">
+      <div class="eblock">
+        <div class="bbadge std">Standard</div>
+        <div class="e-header"><div class="e-m">M</div><div class="e-hotel-name">JW Marriott Houston Downtown</div></div>
+      </div>
+      <div class="eblock">
+        <div class="bbadge grp" id="badge-hero">Group Hero</div>
+        <div class="e-hero" id="hero-content" style="background:linear-gradient(155deg,#7a9280 0%,#4a6b5c 45%,#2e4e44 100%)">
+          <div class="e-hero-text">
+            <h2 id="hero-h">Your team deserves the best.</h2>
+            <p id="hero-p">Everything is ready for your group's arrival.</p>
+          </div>
+        </div>
+      </div>
+      <div class="eblock">
+        <div class="bbadge std">Standard</div>
+        <div class="e-intro"><p id="intro-text">We have prepared your group's stay at JW Marriott Houston Downtown. From private meeting spaces to curated dining, everything your team needs is already in place. We look forward to welcoming you.</p></div>
+      </div>
+      <div class="e-amenities">
+        <div class="e-amenity eblock">
+          <div class="bbadge grp" id="badge-a1">Group Amenity ✦ New</div>
+          <div class="a-name" id="name-a1">Executive Meeting Package</div>
+          <div class="a-desc" id="desc-a1">Private meeting rooms with AV support, high-speed connectivity, and catering on request.</div>
+        </div>
+        <div class="e-amenity eblock">
+          <div class="bbadge grp" id="badge-a2">Group Amenity</div>
+          <div class="a-name" id="name-a2">Group Dining Package</div>
+          <div class="a-desc" id="desc-a2">Reserved dining with a custom menu crafted for your team.</div>
+        </div>
+        <div class="e-amenity eblock">
+          <div class="bbadge def" id="badge-a3">Default</div>
+          <div class="a-name" id="name-a3">Spa &amp; Wellness</div>
+          <div class="a-desc" id="desc-a3">Complimentary access for all registered group guests.</div>
+        </div>
+      </div>
+      <div class="eblock">
+        <div class="bbadge std">Standard</div>
+        <div class="e-cta"><span class="e-cta-btn" id="cta-text">View Your Group Itinerary</span></div>
+      </div>
+      <div class="eblock">
+        <div class="bbadge std">Standard</div>
+        <div class="e-footer"><p>JW Marriott Houston Downtown · 806 Main St, Houston, TX 77002<br><span class="flink">Manage preferences</span> · <span class="flink">Unsubscribe</span></p></div>
+      </div>
+    </div>
+
+    <div class="exit-bar">
+      <button class="exit-back" onclick="showScreen('screen-library')">Back to Library</button>
+      <button class="exit-fwd" onclick="showHandoff()">
+        Continue to Editor
+        <svg width="13" height="13" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+  </div><!-- /.main-content -->
+</div><!-- /.page-layout -->
+
+<div class="toast" id="toast">
+  <svg width="15" height="15" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+  Opening in Email Editor...
+</div>
+
+<script>
+  // ===== STORY PANEL =====
+  var spData = [
+    {
+      step:'Step 1 of 4', title:'Back in the content library',
+      narrative:'Mary created an Executive Meeting Package amenity in Part 1. Now she\'s back in the library, ready to build a pre-arrival email that uses it. The system already knows it\'s there.',
+      callouts:[
+        {l:'A', t:'The <strong>Pre-Arrival Email</strong> card shows reuse tags — content from this touchpoint already powers Lobby Screens.'},
+        {l:'B', t:'<strong>Create New Version</strong> launches the AI-guided flow. No blank slate, no manual block selection.'}
+      ],
+      next:'Click <strong>+ Create New Version</strong> on the Pre-Arrival Email card.',
+      screen:'screen-library'
+    },
+    {
+      step:'Step 2 of 4', title:'A conversation, not a form',
+      narrative:'Mary answers two questions. The system uses her answers to find matching content — including the amenity she just created in Part 1.',
+      callouts:[
+        {l:'A', t:'<strong>Quick-reply chips</strong> keep it fast — no typing required.'},
+        {l:'B', t:'The interface never says "AI assistant." It feels like a warm colleague asking the right questions.'}
+      ],
+      next:'Select <strong>Group travelers</strong>, then <strong>Business</strong>, then click <strong>Build my email</strong>.',
+      screen:'screen-chat'
+    },
+    {
+      step:'Step 3 of 4', title:'The system finds the amenity Mary just created',
+      narrative:'The system searches the library and finds the Executive Meeting Package from Part 1 — automatically, without Mary having to look for it. It fills the remaining slot with a default.',
+      callouts:[
+        {l:'A', t:'<strong>Executive Meeting Package ✦ New</strong> — the amenity Mary created in Part 1 is already here.'},
+        {l:'B', t:'The <strong>Default badge</strong> (amber) shows a fallback filled the last slot — the system handled it automatically.'}
+      ],
+      next:'Click <strong>View your email</strong> once the steps complete.',
+      screen:'screen-analyzing'
+    },
+    {
+      step:'Step 4 of 4', title:'Same library, different email',
+      narrative:'The assembled email includes the amenity Mary built in Part 1. Switch to Leisure to see how the same library produces a completely different email for a different guest — no rebuilding, no duplication.',
+      callouts:[
+        {l:'A', t:'<strong>Block badges</strong> show provenance — the new amenity sits alongside other group blocks.'},
+        {l:'B', t:'The <strong>persona switcher</strong> is the payoff: same library, different guest, different email.'},
+        {l:'C', t:'Toggle <strong>annotations off</strong> to show the clean guest-facing view.'}
+      ],
+      next:'Click <strong>Leisure Traveler</strong> to show the contrast, then toggle annotations off.',
+      screen:'screen-email'
+    }
+  ];
+
+  var spCurrent = 0;
+
+  function renderPanel(idx) {
+    var s = spData[idx];
+    document.getElementById('sp-step').textContent = s.step;
+    document.getElementById('sp-title').textContent = s.title;
+    document.getElementById('sp-narrative').textContent = s.narrative;
+    document.getElementById('sp-callouts').innerHTML =
+      s.callouts.map(function(c){ return '<div class="sp-callout"><div class="sp-letter">'+c.l+'</div><div class="sp-callout-text">'+c.t+'</div></div>'; }).join('') +
+      (s.next ? '<div class="sp-next">&#8594; <strong>Next:</strong> '+s.next+'</div>' : '');
+    document.querySelectorAll('.sp-dot').forEach(function(d,i){
+      d.className = 'sp-dot'+(i<idx?' done':i===idx?' active':'');
+    });
+  }
+
+  function spGoTo(idx) {
+    spCurrent = idx;
+    renderPanel(idx);
+    showScreen(spData[idx].screen);
+  }
+
+  // ===== SCREEN MANAGEMENT =====
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+    // Sync panel
+    for (var i=0;i<spData.length;i++) {
+      if (spData[i].screen===id && i!==spCurrent) {
+        spCurrent=i; renderPanel(i);
+        document.querySelectorAll('.sp-dot').forEach(function(d,j){
+          d.className='sp-dot'+(j<i?' done':j===i?' active':'');
+        });
+        break;
+      }
+    }
+  }
+
+  // ===== CHAT =====
+  function goToChat() {
+    showScreen('screen-chat');
+    document.getElementById('thread').innerHTML='';
+    setTimeout(startChat,150);
+  }
+
+  function addSys(html) {
+    var t=document.getElementById('thread');
+    var m=document.createElement('div'); m.className='msg sys';
+    m.innerHTML='<div class="bubble">'+html+'</div>';
+    t.appendChild(m); m.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+
+  function addUsr(text) {
+    var t=document.getElementById('thread');
+    var m=document.createElement('div'); m.className='msg usr';
+    m.innerHTML='<div class="bubble">'+text+'</div>';
+    t.appendChild(m);
+  }
+
+  function addChips(opts,cb) {
+    var t=document.getElementById('thread');
+    var row=document.createElement('div'); row.className='chips-row';
+    opts.forEach(function(o){
+      var c=document.createElement('button'); c.className='chip'; c.textContent=o.label;
+      c.onclick=function(){ row.remove(); cb(o); };
+      row.appendChild(c);
+    });
+    t.appendChild(row); row.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+
+  function startChat() {
+    setTimeout(function(){
+      addSys("Let's build your new Pre-Arrival Email. Who is this version for?");
+      setTimeout(function(){
+        addChips([{label:'Group travelers',val:'group'},{label:'Individual travelers',val:'individual'}],function(o){
+          addUsr(o.label);
+          setTimeout(function(){
+            addSys("What's the main purpose of their trip?");
+            setTimeout(function(){
+              addChips([{label:'Business',val:'business'},{label:'Leisure',val:'leisure'}],function(o2){
+                addUsr(o2.label);
+                setTimeout(function(){
+                  addSys('Perfect. I\'ll pull together the right content for <strong>'+o2.label+' — '+o.label+'</strong>.');
+                  setTimeout(function(){
+                    var t=document.getElementById('thread');
+                    var wrap=document.createElement('div'); wrap.style.animation='msgIn 0.28s ease';
+                    wrap.innerHTML='<button class="build-btn" onclick="runAnalysis()">Build my email <svg width="15" height="15" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>';
+                    t.appendChild(wrap); wrap.scrollIntoView({behavior:'smooth',block:'nearest'});
+                  },350);
+                },500);
+              });
+            },320);
+          },520);
+        });
+      },420);
+    },280);
+  }
+
+  // ===== ANALYSIS =====
+  function runAnalysis() {
+    showScreen('screen-analyzing');
+    [1,2,3,4].forEach(function(n){
+      var row=document.getElementById('s'+n), ico=document.getElementById('si'+n);
+      row.className='step-row'; ico.className='step-icon'; ico.innerHTML='';
+    });
+    document.getElementById('summary-box').classList.remove('vis');
+    document.getElementById('view-btn').classList.remove('vis');
+    var t=[{s:180,d:620},{s:700,d:1120},{s:1200,d:1640},{s:1750,d:2180}];
+    t.forEach(function(tm,i){
+      var n=i+1;
+      setTimeout(function(){ document.getElementById('s'+n).classList.add('vis'); document.getElementById('si'+n).classList.add('spin'); },tm.s);
+      setTimeout(function(){
+        var ico=document.getElementById('si'+n);
+        ico.classList.remove('spin'); ico.classList.add('done');
+        ico.innerHTML='<svg width="10" height="10" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>';
+        document.getElementById('s'+n).classList.add('done-row');
+        if(n===4){ setTimeout(function(){ document.getElementById('summary-box').classList.add('vis'); setTimeout(function(){ document.getElementById('view-btn').classList.add('vis'); },450); },300); }
+      },tm.d);
+    });
+  }
+
+  // ===== PERSONA SWITCHER =====
+  var personas = {
+    group:{
+      heroBg:'linear-gradient(155deg,#7a9280 0%,#4a6b5c 45%,#2e4e44 100%)',
+      heroH:'Your team deserves the best.', heroP:"Everything is ready for your group's arrival.",
+      badgeHero:'Group Hero', heroClass:'grp',
+      intro:'We have prepared your group\'s stay at JW Marriott Houston Downtown. From private meeting spaces to curated dining, everything your team needs is already in place.',
+      a1:{badge:'Group Amenity ✦ New',cls:'grp',name:'Executive Meeting Package',desc:'Private meeting rooms with AV support, high-speed connectivity, and catering on request.'},
+      a2:{badge:'Group Amenity',cls:'grp',name:'Group Dining Package',desc:'Reserved dining with a custom menu crafted for your team.'},
+      a3:{badge:'Default',cls:'def',name:'Spa & Wellness',desc:'Complimentary access for all registered group guests.'},
+      cta:'View Your Group Itinerary',
+      ctx:'Same content library — different blocks surfaced based on guest profile.'
+    },
+    leisure:{
+      heroBg:'linear-gradient(155deg,#9b7e6a 0%,#6b4a38 45%,#4a2e20 100%)',
+      heroH:'Your escape begins here.', heroP:'Everything is set for a perfect stay.',
+      badgeHero:'Leisure Hero', heroClass:'grp',
+      intro:'Welcome to JW Marriott Houston Downtown. We\'ve curated your stay — from rooftop wellness to intimate dining. We look forward to making your visit unforgettable.',
+      a1:{badge:'Leisure Amenity',cls:'grp',name:'Spa & Wellness',desc:'A full-service spa with signature treatments and rooftop access.'},
+      a2:{badge:'Leisure Amenity',cls:'grp',name:"Chef's Table Experience",desc:'An intimate tasting menu crafted by our executive chef.'},
+      a3:{badge:'Default',cls:'def',name:'Early Check-In',desc:'Arrive early and settle in — subject to availability.'},
+      cta:'Explore Your Stay',
+      ctx:'Leisure blocks replace group blocks. The Default slot fills the same way — same library, different persona.'
+    }
+  };
+
+  function switchPersona(p) {
+    var d=personas[p];
+    document.getElementById('tab-group').className='tab-btn '+(p==='group'?'active':'inactive');
+    document.getElementById('tab-leisure').className='tab-btn '+(p==='leisure'?'active':'inactive');
+    document.getElementById('persona-context').textContent=d.ctx;
+    document.getElementById('hero-content').style.background=d.heroBg;
+    document.getElementById('hero-h').textContent=d.heroH;
+    document.getElementById('hero-p').textContent=d.heroP;
+    document.getElementById('badge-hero').textContent=d.badgeHero;
+    document.getElementById('badge-hero').className='bbadge '+d.heroClass;
+    document.getElementById('intro-text').textContent=d.intro;
+    ['a1','a2','a3'].forEach(function(k){
+      var a=d[k];
+      document.getElementById('badge-'+k).textContent=a.badge;
+      document.getElementById('badge-'+k).className='bbadge '+a.cls;
+      document.getElementById('name-'+k).textContent=a.name;
+      document.getElementById('desc-'+k).textContent=a.desc;
+    });
+    document.getElementById('cta-text').textContent=d.cta;
+    var f=document.getElementById('email-frame');
+    f.style.opacity='0'; f.style.transform='translateY(6px)';
+    setTimeout(function(){ f.style.opacity='1'; f.style.transform='translateY(0)'; },60);
+  }
+
+  // ===== ANNOTATIONS =====
+  var annosOn=true;
+  function toggleAnnos() {
+    annosOn=!annosOn;
+    document.getElementById('email-frame').classList.toggle('annos-off',!annosOn);
+    document.getElementById('anno-track').classList.toggle('off',!annosOn);
+    document.getElementById('anno-label').textContent=annosOn?'Block annotations on':'Block annotations off';
+  }
+
+  function showHandoff() {
+    var t=document.getElementById('toast'); t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); },2800);
+  }
+
+  // ===== INIT =====
+  renderPanel(0);
+</script>
+</body>
+</html>
