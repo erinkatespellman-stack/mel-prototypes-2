@@ -114,7 +114,7 @@
     .section-label { font-size: 11px; font-weight: 500; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; }
     .section-pill { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: var(--accent); color: white; }
     .cards-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 36px; }
-    .card { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--bg); }
+    .card { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; height: 280px; }
     .card.featured { border-color: var(--accent); border-width: 1.5px; }
     .card-thumb { height: 96px; }
     .thumb-warm { background: linear-gradient(145deg, #b09070 0%, #7d5c3a 100%); }
@@ -125,7 +125,8 @@
     .thumb-rust { background: linear-gradient(145deg, #6b2a0e 0%, #3e1508 100%); }
     .thumb-wapp { background: linear-gradient(145deg, #3b7a57 0%, #1e4d35 100%); }
     .thumb-push { background: linear-gradient(145deg, #435e7a 0%, #263850 100%); }
-    .card-body { padding: 14px 14px 16px; }
+    .card-body { padding: 14px 14px 16px; flex: 1; display: flex; flex-direction: column; }
+    .card-body > .btn { margin-top: auto !important; }
     .card-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
     .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 500; margin-bottom: 8px; }
     .badge.active { background: var(--green-bg); color: var(--green); }
@@ -516,9 +517,6 @@
                 <div class="card-name">Pre-Arrival Email</div>
                 <span class="badge active"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg> Active</span>
                 <div class="card-meta">Active since Jan 1, 2025<br>Draft edits last saved Apr 18, 2025</div>
-                <div class="tag-row">
-                  <span class="content-tag"><span class="reuse-sym">⟲</span> Used across 3 channels</span>
-                </div>
                 <button class="btn btn-manage" onclick="showScreen('screen-versions')">Manage</button>
               </div>
             </div>
