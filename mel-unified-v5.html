@@ -488,8 +488,75 @@
 
         <nav class="tab-nav">
           <a class="tab-link" id="nav-channels" onclick="switchTab('channels')">Channels</a>
-          <a class="tab-link" id="nav-content-library" onclick="switchTab('content-library')">Content Library</a>
+          <a class="tab-link" id="nav-content-library" onclick="switchTab('content-library')">Content</a>
         </nav>
+
+        <!-- Shared attribute filter dropdowns (Channels + Content) -->
+        <div class="attr-filter-row" id="attr-filter-row">
+          <div class="af-group" id="afg-level">
+            <button class="af-btn" id="afb-level" onclick="toggleDD('level', event)">
+              Level <span class="af-count" id="afc-level" style="display:none">0</span>
+              <span class="af-chevron">▾</span>
+            </button>
+            <div class="af-panel" id="afp-level">
+              <label class="af-option"><input type="checkbox" data-group="level" value="Premium" onchange="onFilterChange()"> Premium</label>
+              <label class="af-option"><input type="checkbox" data-group="level" value="Silver Elite" onchange="onFilterChange()"> Silver Elite</label>
+              <label class="af-option"><input type="checkbox" data-group="level" value="Elite" onchange="onFilterChange()"> Elite</label>
+              <label class="af-option"><input type="checkbox" data-group="level" value="Gold" onchange="onFilterChange()"> Gold</label>
+              <label class="af-option"><input type="checkbox" data-group="level" value="Silver" onchange="onFilterChange()"> Silver</label>
+              <label class="af-option"><input type="checkbox" data-group="level" value="Non-member" onchange="onFilterChange()"> Non-member</label>
+            </div>
+          </div>
+          <div class="af-group" id="afg-traveler">
+            <button class="af-btn" id="afb-traveler" onclick="toggleDD('traveler', event)">
+              Traveler <span class="af-count" id="afc-traveler" style="display:none">0</span>
+              <span class="af-chevron">▾</span>
+            </button>
+            <div class="af-panel" id="afp-traveler">
+              <label class="af-option"><input type="checkbox" data-group="traveler" value="Business" onchange="onFilterChange()"> Business</label>
+              <label class="af-option"><input type="checkbox" data-group="traveler" value="Leisure" onchange="onFilterChange()"> Leisure</label>
+            </div>
+          </div>
+          <div class="af-group" id="afg-season">
+            <button class="af-btn" id="afb-season" onclick="toggleDD('season', event)">
+              Season <span class="af-count" id="afc-season" style="display:none">0</span>
+              <span class="af-chevron">▾</span>
+            </button>
+            <div class="af-panel" id="afp-season">
+              <label class="af-option"><input type="checkbox" data-group="season" value="Winter" onchange="onFilterChange()"> Winter</label>
+              <label class="af-option"><input type="checkbox" data-group="season" value="Summer" onchange="onFilterChange()"> Summer</label>
+              <label class="af-option"><input type="checkbox" data-group="season" value="Spring" onchange="onFilterChange()"> Spring</label>
+              <label class="af-option"><input type="checkbox" data-group="season" value="Fall" onchange="onFilterChange()"> Fall</label>
+              <label class="af-option"><input type="checkbox" data-group="season" value="Winter Holiday" onchange="onFilterChange()"> Winter Holiday</label>
+              <label class="af-option"><input type="checkbox" data-group="season" value="Wedding" onchange="onFilterChange()"> Wedding</label>
+            </div>
+          </div>
+          <div class="af-group" id="afg-history">
+            <button class="af-btn" id="afb-history" onclick="toggleDD('history', event)">
+              History <span class="af-count" id="afc-history" style="display:none">0</span>
+              <span class="af-chevron">▾</span>
+            </button>
+            <div class="af-panel" id="afp-history">
+              <label class="af-option"><input type="checkbox" data-group="history" value="Returning" onchange="onFilterChange()"> Returning</label>
+              <label class="af-option"><input type="checkbox" data-group="history" value="New member" onchange="onFilterChange()"> New member</label>
+            </div>
+          </div>
+          <div class="af-group" id="afg-type">
+            <button class="af-btn" id="afb-type" onclick="toggleDD('type', event)">
+              Type <span class="af-count" id="afc-type" style="display:none">0</span>
+              <span class="af-chevron">▾</span>
+            </button>
+            <div class="af-panel" id="afp-type">
+              <label class="af-option"><input type="checkbox" data-group="type" value="Individual" onchange="onFilterChange()"> Individual</label>
+              <label class="af-option"><input type="checkbox" data-group="type" value="Group" onchange="onFilterChange()"> Group</label>
+            </div>
+          </div>
+          <button class="af-btn" id="af-clear-btn" onclick="clearAllFilters()" style="display:none; color:var(--text-light); border-color:transparent; background:transparent;">Clear all</button>
+        </div>
+        <div class="persona-preview-bar" id="persona-preview-bar">
+          <div class="ppb-label">Previewing for persona:</div>
+          <div class="ppb-attrs" id="ppb-attrs"></div>
+        </div>
 
         <!-- ── CHANNELS ── -->
         <div class="tab-pane" id="pane-channels">
@@ -626,80 +693,6 @@
             <div class="sstat"><div class="sl">Scheduled</div><div class="sv">4</div><div class="sd">Activating this season</div></div>
             <div class="sstat"><div class="sl">Inactive</div><div class="sv">3</div><div class="sd">Conditions not currently met</div></div>
             <div class="sstat"><div class="sl">Tied to campaigns</div><div class="sv">18</div><div class="sd">Across 6 email versions</div></div>
-          </div>
-
-          <!-- Attribute filter dropdowns -->
-          <div class="attr-filter-row" id="attr-filter-row">
-            <!-- Level -->
-            <div class="af-group" id="afg-level">
-              <button class="af-btn" id="afb-level" onclick="toggleDD('level', event)">
-                Level <span class="af-count" id="afc-level" style="display:none">0</span>
-                <span class="af-chevron">▾</span>
-              </button>
-              <div class="af-panel" id="afp-level">
-                <label class="af-option"><input type="checkbox" data-group="level" value="Premium" onchange="onFilterChange()"> Premium</label>
-                <label class="af-option"><input type="checkbox" data-group="level" value="Silver Elite" onchange="onFilterChange()"> Silver Elite</label>
-                <label class="af-option"><input type="checkbox" data-group="level" value="Elite" onchange="onFilterChange()"> Elite</label>
-                <label class="af-option"><input type="checkbox" data-group="level" value="Gold" onchange="onFilterChange()"> Gold</label>
-                <label class="af-option"><input type="checkbox" data-group="level" value="Silver" onchange="onFilterChange()"> Silver</label>
-                <label class="af-option"><input type="checkbox" data-group="level" value="Non-member" onchange="onFilterChange()"> Non-member</label>
-              </div>
-            </div>
-            <!-- Traveler -->
-            <div class="af-group" id="afg-traveler">
-              <button class="af-btn" id="afb-traveler" onclick="toggleDD('traveler', event)">
-                Traveler <span class="af-count" id="afc-traveler" style="display:none">0</span>
-                <span class="af-chevron">▾</span>
-              </button>
-              <div class="af-panel" id="afp-traveler">
-                <label class="af-option"><input type="checkbox" data-group="traveler" value="Business" onchange="onFilterChange()"> Business</label>
-                <label class="af-option"><input type="checkbox" data-group="traveler" value="Leisure" onchange="onFilterChange()"> Leisure</label>
-              </div>
-            </div>
-            <!-- Season -->
-            <div class="af-group" id="afg-season">
-              <button class="af-btn" id="afb-season" onclick="toggleDD('season', event)">
-                Season <span class="af-count" id="afc-season" style="display:none">0</span>
-                <span class="af-chevron">▾</span>
-              </button>
-              <div class="af-panel" id="afp-season">
-                <label class="af-option"><input type="checkbox" data-group="season" value="Winter" onchange="onFilterChange()"> Winter</label>
-                <label class="af-option"><input type="checkbox" data-group="season" value="Summer" onchange="onFilterChange()"> Summer</label>
-                <label class="af-option"><input type="checkbox" data-group="season" value="Spring" onchange="onFilterChange()"> Spring</label>
-                <label class="af-option"><input type="checkbox" data-group="season" value="Fall" onchange="onFilterChange()"> Fall</label>
-                <label class="af-option"><input type="checkbox" data-group="season" value="Winter Holiday" onchange="onFilterChange()"> Winter Holiday</label>
-                <label class="af-option"><input type="checkbox" data-group="season" value="Wedding" onchange="onFilterChange()"> Wedding</label>
-              </div>
-            </div>
-            <!-- History -->
-            <div class="af-group" id="afg-history">
-              <button class="af-btn" id="afb-history" onclick="toggleDD('history', event)">
-                History <span class="af-count" id="afc-history" style="display:none">0</span>
-                <span class="af-chevron">▾</span>
-              </button>
-              <div class="af-panel" id="afp-history">
-                <label class="af-option"><input type="checkbox" data-group="history" value="Returning" onchange="onFilterChange()"> Returning</label>
-                <label class="af-option"><input type="checkbox" data-group="history" value="New member" onchange="onFilterChange()"> New member</label>
-              </div>
-            </div>
-            <!-- Type -->
-            <div class="af-group" id="afg-type">
-              <button class="af-btn" id="afb-type" onclick="toggleDD('type', event)">
-                Type <span class="af-count" id="afc-type" style="display:none">0</span>
-                <span class="af-chevron">▾</span>
-              </button>
-              <div class="af-panel" id="afp-type">
-                <label class="af-option"><input type="checkbox" data-group="type" value="Individual" onchange="onFilterChange()"> Individual</label>
-                <label class="af-option"><input type="checkbox" data-group="type" value="Group" onchange="onFilterChange()"> Group</label>
-              </div>
-            </div>
-            <button class="af-btn" id="af-clear-btn" onclick="clearAllFilters()" style="display:none; color:var(--text-light); border-color:transparent; background:transparent;">Clear all</button>
-          </div>
-
-          <!-- Persona preview bar -->
-          <div class="persona-preview-bar" id="persona-preview-bar">
-            <div class="ppb-label">Previewing for persona:</div>
-            <div class="ppb-attrs" id="ppb-attrs"></div>
           </div>
 
           <!-- Status filter (simplified) -->
