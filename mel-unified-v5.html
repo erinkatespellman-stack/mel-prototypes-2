@@ -363,6 +363,45 @@
     .ep-revert:hover { background: var(--bg-soft); }
     .ep-generate { display: flex; align-items: center; gap: 5px; padding: 7px 14px; background: var(--purple); color: white; border: none; border-radius: 4px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; }
     .ep-generate:hover { background: #5a2d8a; }
+    /* METT-style additions */
+    .editing-panel { width: 340px; }
+    .ep-collapse-all { margin-left: auto; background: none; border: none; font-size: 11px; color: var(--text-light); cursor: pointer; padding: 3px 6px; border-radius: 3px; font-family: inherit; }
+    .ep-collapse-all:hover { background: var(--bg); color: var(--accent); }
+    .ep-active-indicator { display: inline-flex; align-items: center; gap: 6px; background: #e9f7f2; color: #2e7d32; font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 3px; margin-top: 6px; }
+    .ep-active-indicator::before { content: ''; width: 6px; height: 6px; background: #2e7d32; border-radius: 50%; }
+    .ep-section-hdr.highlighted { background: #eaf3fe; }
+    .ep-section-hdr.highlighted .ep-icon { background: #eaf3fe; border-color: var(--accent); color: var(--accent); }
+    .ep-char-count.near { color: #d97706; }
+    .ep-char-count.over { color: #dc2626; }
+    .ep-input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: 12px; color: var(--text); background: #fff; }
+    .ep-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(20,115,230,0.15); }
+    .ep-field-group { margin-bottom: 14px; }
+    .ep-field-group:last-child { margin-bottom: 0; }
+    .ep-image-selector { border: 1px dashed var(--border); border-radius: 4px; height: 78px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-size: 12px; color: var(--text-faint); background: var(--bg-soft); }
+    .ep-image-selector:hover { border-color: var(--accent); color: var(--accent); background: #eaf3fe; }
+    .ep-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+    .ep-chip { display: inline-flex; align-items: center; gap: 4px; background: #eaf3fe; color: var(--accent); font-size: 11px; font-weight: 500; padding: 4px 8px; border-radius: 20px; }
+    .ep-chip button { background: none; border: none; cursor: pointer; color: var(--accent); font-size: 12px; line-height: 1; padding: 0; opacity: 0.6; }
+    .ep-chip button:hover { opacity: 1; }
+    .ep-blocks-list { display: flex; flex-direction: column; }
+    .ep-block-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid #f4f4f4; }
+    .ep-block-row:last-child { border-bottom: none; }
+    .ep-block-row:hover { background: #fafafa; margin: 0 -14px; padding-left: 14px; padding-right: 14px; }
+    .ep-block-num { width: 20px; height: 20px; background: var(--accent); color: #fff; border-radius: 50%; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ep-block-thumb { width: 36px; height: 28px; border-radius: 3px; flex-shrink: 0; }
+    .ep-block-info { flex: 1; min-width: 0; }
+    .ep-block-info .name { font-size: 11px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ep-block-info .type-tag { font-size: 10px; color: var(--text-faint); }
+    .ep-block-actions { display: flex; gap: 1px; align-items: center; }
+    .ep-icon-btn { width: 22px; height: 22px; background: none; border: none; border-radius: 3px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-light); }
+    .ep-icon-btn:hover { background: var(--bg-soft); color: var(--text); }
+    .ep-icon-btn.red:hover { color: #dc2626; background: #fff0f0; }
+    .ep-icon-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .ep-icon-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .ep-add-block-btn { display: flex; align-items: center; justify-content: center; gap: 5px; width: 100%; margin-top: 12px; padding: 8px; border: 1px solid var(--border); background: var(--bg); border-radius: 4px; font-size: 12px; font-family: inherit; color: var(--text-light); cursor: pointer; }
+    .ep-add-block-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .email-section[data-section], .email-hero[data-section] { cursor: pointer; transition: outline 0.15s; }
+    .email-section.active, .email-hero.active { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
     /* Email frame internals */
     .email-hero { height: 180px; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; transition: background 0.3s; }
@@ -971,16 +1010,16 @@
         <div class="email-editing-row">
           <!-- Email frame -->
           <div class="email-frame" id="email-frame">
-            <div class="email-hero" id="hero-content" style="background:linear-gradient(155deg,#7a9280 0%,#4a6b5c 45%,#2e4e44 100%);">
+            <div class="email-hero" id="hero-content" data-section="hero-image" onclick="selectEpSection('hero-image')" style="background:linear-gradient(155deg,#7a9280 0%,#4a6b5c 45%,#2e4e44 100%);">
               <div class="bbadge-row"><span class="bbadge biz" id="badge-hero">Business Hero</span></div>
               <div class="hero-h" id="hero-h">Your next chapter awaits.</div>
               <div class="hero-p" id="hero-p">Everything is set for your business stay in Houston.</div>
             </div>
-            <div class="email-section">
+            <div class="email-section" data-section="welcome-desc" onclick="selectEpSection('welcome-desc')">
               <div class="email-section-label">Introduction</div>
               <div class="email-intro" id="intro-text">We've prepared your stay at JW Marriott Houston Downtown. From a fully equipped workspace to curated business services, everything is in place for a productive trip.</div>
             </div>
-            <div class="email-section">
+            <div class="email-section" data-section="content-blocks" onclick="selectEpSection('content-blocks')">
               <div class="email-section-label">Your Amenities</div>
               <div class="email-amenity">
                 <div class="bbadge-row" id="badges-a1"><span class="bbadge biz">Individual Business</span><span class="bbadge new-b">✦ New</span></div>
@@ -998,83 +1037,112 @@
                 <div class="amenity-desc" id="desc-a3">Complimentary access for all guests.</div>
               </div>
             </div>
-            <div class="email-section">
+            <div class="email-section" data-section="welcome-cta" onclick="selectEpSection('welcome-cta')">
               <button class="email-cta-btn" id="cta-text">View Your Business Itinerary</button>
             </div>
           </div>
 
-          <!-- Editing panel -->
+          <!-- Editing panel (METT-style) -->
           <div class="editing-panel">
-            <div class="ep-header">
-              <div class="ep-collapse">&gt;&gt;</div>
-              <div class="ep-title">Content Editing</div>
-            </div>
-
-            <!-- Header Content -->
-            <div class="ep-section">
-              <div class="ep-section-hdr" onclick="toggleEpSection(this)">
-                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="var(--text-light)" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg></div>
-                <div class="ep-section-info"><div class="ep-section-label">Header Content</div><div class="ep-section-sub">Choose the guest's loyalty tier</div></div>
-                <span class="ep-chevron">▾</span>
+            <div class="ep-header" style="flex-direction:column;align-items:flex-start;">
+              <div style="display:flex;align-items:center;gap:8px;width:100%;">
+                <div class="ep-title">Content Editing</div>
+                <button class="ep-collapse-all" onclick="collapseAllEpSections()">Collapse all</button>
               </div>
+              <div class="ep-active-indicator" id="ep-active-indicator">Currently editing: Welcome Description</div>
             </div>
 
             <!-- Hero Image -->
-            <div class="ep-section">
+            <div class="ep-section" id="acc-hero-image">
               <div class="ep-section-hdr" onclick="toggleEpSection(this)">
-                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="var(--text-light)" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
-                <div class="ep-section-info"><div class="ep-section-label">Hero Image</div><div class="ep-section-sub">Individual or group reservation</div></div>
+                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg></div>
+                <div class="ep-section-info"><div class="ep-section-label">Hero Image</div><div class="ep-section-sub">Select a main image</div></div>
                 <span class="ep-chevron">▾</span>
+              </div>
+              <div class="ep-body">
+                <div class="ep-field-group">
+                  <div class="ep-field-label"><span class="ep-label-text">Image</span></div>
+                  <div class="ep-image-selector" onclick="showToast('Opening DAC picker…')">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+                    Select from DAC
+                  </div>
+                </div>
+                <div class="ep-field-group">
+                  <div class="ep-field-label"><span class="ep-label-text">Alt Text</span><span class="ep-char-count" id="cc-hero-alt">0 / 120</span></div>
+                  <input type="text" class="ep-input" id="field-hero-alt" placeholder="Describe the image for accessibility…" oninput="epUpdateCount(this,'cc-hero-alt',120)">
+                </div>
               </div>
             </div>
 
-            <!-- Body Content 1 — EXPANDED -->
-            <div class="ep-section">
+            <!-- Welcome Title -->
+            <div class="ep-section" id="acc-welcome-title">
               <div class="ep-section-hdr" onclick="toggleEpSection(this)">
-                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="var(--accent)" stroke-width="1.8" viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></div>
-                <div class="ep-section-info"><div class="ep-section-label" style="color:var(--accent);">Body Content 1</div><div class="ep-section-sub">Intro paragraph for this persona</div></div>
-                <span class="ep-chevron" style="color:var(--accent);">▴</span>
+                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="4,7 4,4 20,4 20,7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div>
+                <div class="ep-section-info"><div class="ep-section-label">Welcome Title</div><div class="ep-section-sub">Add a title</div></div>
+                <span class="ep-chevron">▾</span>
+              </div>
+              <div class="ep-body">
+                <div class="ep-field-group">
+                  <div class="ep-field-label"><span class="ep-label-text">Title Text</span><span class="ep-char-count" id="cc-title">25 / 80</span></div>
+                  <input type="text" class="ep-input" id="field-title" value="Your next chapter awaits." oninput="epUpdateCount(this,'cc-title',80); epSyncPreview('hero-h', this.value)">
+                  <div class="ep-actions">
+                    <button class="ep-revert" onclick="epRevert('field-title','Your next chapter awaits.','cc-title',80,'hero-h')">Revert</button>
+                    <button class="ep-generate" onclick="epGenerate('field-title','cc-title',80,'hero-h','title', this)">
+                      <svg width="12" height="12" fill="white" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+                      Generate
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Welcome Description -->
+            <div class="ep-section" id="acc-welcome-desc">
+              <div class="ep-section-hdr highlighted open" onclick="toggleEpSection(this)">
+                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></div>
+                <div class="ep-section-info"><div class="ep-section-label">Welcome Description &amp; CTA</div><div class="ep-section-sub">Description and call-to-action</div></div>
+                <span class="ep-chevron">▴</span>
               </div>
               <div class="ep-body open">
-                <div class="ep-field-label">
-                  <span class="ep-label-text">Description</span>
-                  <span class="ep-char-count">38 of 186 characters remaining</span>
+                <div class="ep-field-group">
+                  <div class="ep-field-label"><span class="ep-label-text">Description</span><span class="ep-char-count" id="cc-desc">186 / 240</span></div>
+                  <textarea class="ep-textarea" id="field-desc" rows="4" oninput="epUpdateCount(this,'cc-desc',240); epSyncPreview('intro-text', this.value)">We've prepared your stay at JW Marriott Houston Downtown. From a fully equipped workspace to curated business services, everything is in place for a productive trip.</textarea>
+                  <div class="ep-actions">
+                    <button class="ep-revert" onclick="epRevert('field-desc',&quot;We've prepared your stay at JW Marriott Houston Downtown. From a fully equipped workspace to curated business services, everything is in place for a productive trip.&quot;,'cc-desc',240,'intro-text')">Revert</button>
+                    <button class="ep-generate" onclick="epGenerate('field-desc','cc-desc',240,'intro-text','desc', this)">
+                      <svg width="12" height="12" fill="white" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+                      Generate
+                    </button>
+                  </div>
                 </div>
-                <textarea class="ep-textarea" rows="4">We've prepared your stay at JW Marriott Houston Downtown. From a fully equipped workspace to curated business services, everything is in place for a productive trip.</textarea>
-                <div class="ep-actions">
-                  <button class="ep-revert">Revert</button>
-                  <button class="ep-generate" onclick="runGenerate(this)">
-                    <svg width="12" height="12" fill="white" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-                    Generate
-                  </button>
+                <div class="ep-field-group">
+                  <div class="ep-field-label"><span class="ep-label-text">CTA Label</span><span class="ep-char-count" id="cc-cta">28 / 40</span></div>
+                  <input type="text" class="ep-input" id="field-cta" value="View Your Business Itinerary" oninput="epUpdateCount(this,'cc-cta',40); epSyncPreview('cta-text', this.value)">
+                </div>
+                <div class="ep-field-group">
+                  <div class="ep-field-label"><span class="ep-label-text">CTA URL</span></div>
+                  <input type="text" class="ep-input" value="https://marriott.com/stays" placeholder="https://…">
                 </div>
               </div>
             </div>
 
-            <!-- Amenities -->
-            <div class="ep-section">
+            <!-- Content Blocks -->
+            <div class="ep-section" id="acc-content-blocks">
               <div class="ep-section-hdr" onclick="toggleEpSection(this)">
-                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="var(--text-light)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-                <div class="ep-section-info"><div class="ep-section-label">Amenities</div><div class="ep-section-sub">3 blocks selected for this version</div></div>
+                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                <div class="ep-section-info"><div class="ep-section-label">Content Blocks</div><div class="ep-section-sub">Select amenities and order them</div></div>
                 <span class="ep-chevron">▾</span>
               </div>
-            </div>
-
-            <!-- Body Content 2 -->
-            <div class="ep-section">
-              <div class="ep-section-hdr" onclick="toggleEpSection(this)">
-                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="var(--text-light)" stroke-width="1.8" viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></div>
-                <div class="ep-section-info"><div class="ep-section-label">Body Content 2</div><div class="ep-section-sub">Select a date to preview</div></div>
-                <span class="ep-chevron">▾</span>
-              </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="ep-section">
-              <div class="ep-section-hdr" onclick="toggleEpSection(this)">
-                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="var(--text-light)" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15h18"/></svg></div>
-                <div class="ep-section-info"><div class="ep-section-label">Footer</div><div class="ep-section-sub">Legal, contact, unsubscribe</div></div>
-                <span class="ep-chevron">▾</span>
+              <div class="ep-body">
+                <div class="ep-chips">
+                  <div class="ep-chip">Amenities <button onclick="this.closest('.ep-chip').remove(); showToast('Filter removed');">×</button></div>
+                  <div class="ep-chip">Business <button onclick="this.closest('.ep-chip').remove(); showToast('Filter removed');">×</button></div>
+                </div>
+                <div class="ep-blocks-list" id="ep-blocks-list"></div>
+                <button class="ep-add-block-btn" onclick="showToast('Opening content library…')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add Content Block
+                </button>
               </div>
             </div>
           </div><!-- /editing-panel -->
@@ -1680,8 +1748,164 @@
     if (!body) return;
     var chevron = hdr.querySelector('.ep-chevron');
     var isOpen = body.classList.toggle('open');
+    hdr.classList.toggle('open', isOpen);
     if (chevron) chevron.textContent = isOpen ? '▴' : '▾';
   }
+
+  function collapseAllEpSections() {
+    document.querySelectorAll('.editing-panel .ep-body').forEach(function(b){ b.classList.remove('open'); });
+    document.querySelectorAll('.editing-panel .ep-section-hdr').forEach(function(h){
+      h.classList.remove('open','highlighted');
+      var c = h.querySelector('.ep-chevron');
+      if (c) c.textContent = '▾';
+    });
+  }
+
+  var EP_SECTION_MAP = {
+    'hero-image':    { acc: 'acc-hero-image',    label: 'Hero Image' },
+    'welcome-title': { acc: 'acc-welcome-title', label: 'Welcome Title' },
+    'welcome-desc':  { acc: 'acc-welcome-desc',  label: 'Welcome Description' },
+    'welcome-cta':   { acc: 'acc-welcome-desc',  label: 'Call-to-Action' },
+    'content-blocks':{ acc: 'acc-content-blocks',label: 'Content Blocks' }
+  };
+
+  function selectEpSection(id) {
+    document.querySelectorAll('#email-frame [data-section]').forEach(function(el){ el.classList.remove('active'); });
+    document.querySelectorAll('.editing-panel .ep-section-hdr').forEach(function(h){ h.classList.remove('highlighted'); });
+    var emailEl = document.querySelector('#email-frame [data-section="' + id + '"]');
+    if (emailEl) emailEl.classList.add('active');
+    var map = EP_SECTION_MAP[id];
+    if (!map) return;
+    var acc = document.getElementById(map.acc);
+    if (!acc) return;
+    var hdr = acc.querySelector('.ep-section-hdr');
+    var body = acc.querySelector('.ep-body');
+    if (body && !body.classList.contains('open')) toggleEpSection(hdr);
+    if (hdr) hdr.classList.add('highlighted');
+    var ind = document.getElementById('ep-active-indicator');
+    if (ind) ind.textContent = 'Currently editing: ' + map.label;
+    setTimeout(function(){ acc.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 50);
+  }
+
+  function epUpdateCount(el, ccId, max) {
+    var len = el.value.length;
+    var cc = document.getElementById(ccId);
+    if (!cc) return;
+    cc.textContent = len + ' / ' + max;
+    cc.className = 'ep-char-count' + (len > max ? ' over' : len > max * 0.85 ? ' near' : '');
+  }
+
+  function epSyncPreview(previewId, value) {
+    var el = document.getElementById(previewId);
+    if (el) el.textContent = value;
+  }
+
+  function epRevert(fieldId, original, ccId, max, previewId) {
+    var el = document.getElementById(fieldId);
+    if (!el) return;
+    el.value = original;
+    epUpdateCount(el, ccId, max);
+    if (previewId) epSyncPreview(previewId, original);
+    el.style.transition = 'background 0.3s';
+    el.style.background = '#fffde7';
+    setTimeout(function(){ el.style.background = ''; }, 600);
+  }
+
+  var EP_GENERATED = {
+    title: [
+      'Welcome to Houston — Your Stay Awaits',
+      'Your Business Stay, Perfectly Set',
+      'Everything Ready for Your Arrival'
+    ],
+    desc: [
+      "Your stay at JW Marriott Houston Downtown is fully prepared. Expect a dedicated workspace, fast Wi-Fi, and curated business services from check-in to check-out.",
+      "We've tailored every detail of your business trip to Houston — from a private workspace to executive transfers — so you can focus on what matters.",
+      "Arrive ready to work. Your room at JW Marriott Houston Downtown is set up with a productive workspace, premium connectivity, and on-demand business services."
+    ]
+  };
+  var epGenIdx = { title: 0, desc: 0 };
+
+  function epGenerate(fieldId, ccId, max, previewId, key, btn) {
+    var pool = EP_GENERATED[key] || [];
+    if (!pool.length) return;
+    var original = btn.innerHTML;
+    btn.disabled = true;
+    btn.textContent = 'Generating…';
+    setTimeout(function(){
+      var text = pool[epGenIdx[key] % pool.length];
+      epGenIdx[key]++;
+      var el = document.getElementById(fieldId);
+      if (el) {
+        el.value = text;
+        epUpdateCount(el, ccId, max);
+        if (previewId) epSyncPreview(previewId, text);
+        el.style.transition = 'background 0.4s';
+        el.style.background = '#e8f4fd';
+        setTimeout(function(){ el.style.background = ''; }, 800);
+      }
+      btn.disabled = false;
+      btn.innerHTML = original;
+    }, 800);
+  }
+
+  // ===== CONTENT BLOCKS LIST =====
+  var EP_BLOCKS = [
+    { id:1, name:'Executive Meeting Package', type:'Amenity · ✦ New', color:'#4a6a8a', nameId:'name-a1', descId:'desc-a1' },
+    { id:2, name:'Airport Transfer Service',  type:'Amenity',         color:'#5a7d5a', nameId:'name-a2', descId:'desc-a2' },
+    { id:3, name:'Spa & Wellness',            type:'Default',         color:'#8a6a4a', nameId:'name-a3', descId:'desc-a3' }
+  ];
+  var epBlocks = EP_BLOCKS.slice();
+
+  function epRenderBlocks() {
+    var list = document.getElementById('ep-blocks-list');
+    if (!list) return;
+    list.innerHTML = '';
+    epBlocks.forEach(function(b, i){
+      var row = document.createElement('div');
+      row.className = 'ep-block-row';
+      row.innerHTML =
+        '<div class="ep-block-num">' + (i+1) + '</div>' +
+        '<div class="ep-block-thumb" style="background:' + b.color + ';"></div>' +
+        '<div class="ep-block-info"><div class="name">' + b.name + '</div><div class="type-tag">' + b.type + '</div></div>' +
+        '<div class="ep-block-actions">' +
+          '<button class="ep-icon-btn" title="Edit" onclick="showToast(\'Editing: ' + b.name.replace(/'/g,"\\'") + '\')"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>' +
+          '<button class="ep-icon-btn" title="Move up" onclick="epMoveBlock(' + i + ',-1)"' + (i===0?' disabled':'') + '><svg viewBox="0 0 24 24"><polyline points="18,15 12,9 6,15"/></svg></button>' +
+          '<button class="ep-icon-btn" title="Move down" onclick="epMoveBlock(' + i + ',1)"' + (i===epBlocks.length-1?' disabled':'') + '><svg viewBox="0 0 24 24"><polyline points="6,9 12,15 18,9"/></svg></button>' +
+          '<button class="ep-icon-btn red" title="Remove" onclick="epRemoveBlock(' + i + ')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></button>' +
+        '</div>';
+      list.appendChild(row);
+    });
+    epSyncEmailBlocks();
+  }
+
+  function epSyncEmailBlocks() {
+    // Hide all amenity rows in email, then show in current order
+    var amenities = document.querySelectorAll('#email-frame .email-amenity');
+    amenities.forEach(function(a){ a.style.display = 'none'; });
+    epBlocks.forEach(function(b, i){
+      var n = document.getElementById('name-a' + (i+1));
+      var row = n ? n.closest('.email-amenity') : null;
+      if (row) {
+        row.style.display = '';
+        n.textContent = b.name;
+      }
+    });
+  }
+
+  function epMoveBlock(idx, dir) {
+    var ni = idx + dir;
+    if (ni < 0 || ni >= epBlocks.length) return;
+    var tmp = epBlocks[idx]; epBlocks[idx] = epBlocks[ni]; epBlocks[ni] = tmp;
+    epRenderBlocks();
+  }
+
+  function epRemoveBlock(idx) {
+    epBlocks.splice(idx, 1);
+    epRenderBlocks();
+    showToast('Block removed');
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){ if (document.getElementById('ep-blocks-list')) epRenderBlocks(); });
 
   // ===== TOAST =====
   function showToast(msg, duration) {
