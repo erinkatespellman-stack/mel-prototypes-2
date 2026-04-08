@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEL — JW Marriott Houston (Demo)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --adobe-bar: #2b2b2b;
+      --accent: #1473e6;
+      --accent-bg: #e8f3ff;
+      --green: #2d7d45;
+      --green-bg: #e6f4eb;
+      --amber: #b05c0a;
+      --amber-bg: #fdf0e2;
+      --purple: #6b3fa0;
+      --purple-bg: #f0e8f8;
+      --text: #1a1a1a;
+      --text-light: #6b6b6b;
+      --text-faint: #a8a8a8;
+      --border: #e0dedd;
+      --bg: #ffffff;
+      --bg-soft: #f5f4f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+
+    /* ===== CHROME ===== */
+    .adobe-bar { background: var(--adobe-bar); height: 44px; display: flex; align-items: center; padding: 0 16px; justify-content: space-between; position: sticky; top: 0; z-index: 200; }
+    .adobe-brand { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.9); font-size: 14px; }
+    .adobe-logo { width: 28px; height: 28px; background: #fa0f00; border-radius: 3px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 700; }
+    .home-icon-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 4px; cursor: pointer; opacity: 0.75; transition: opacity 0.15s, background 0.15s; border: none; background: transparent; }
+    .home-icon-btn:hover { opacity: 1; background: rgba(255,255,255,0.12); }
+    .adobe-nav { display: flex; align-items: center; gap: 4px; }
+    .adobe-icons { display: flex; align-items: center; gap: 14px; }
+    .user-avatar { width: 28px; height: 28px; background: #2d7d45; border-radius: 50%; color: white; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+    .marriott-bar { background: var(--bg); height: 52px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 24px; justify-content: space-between; position: sticky; top: 44px; z-index: 100; }
+    .m-lockup { display: flex; align-items: center; gap: 10px; }
+    .m-logo { width: 30px; height: 30px; background: var(--text); border-radius: 3px; color: white; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .property-name { font-size: 14px; font-weight: 500; }
+    .bar-btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; background: var(--bg); color: var(--text-light); font-family: inherit; }
+
+    /* ===== LAYOUT ===== */
+    .page-layout { display: flex; min-height: calc(100vh - 96px); }
+
+    /* ===== STORY PANEL ===== */
+    .story-panel { width: 224px; flex-shrink: 0; background: #eff6ff; border-right: 1px solid #bfdbfe; display: flex; flex-direction: column; position: sticky; top: 96px; height: calc(100vh - 96px); overflow-y: auto; }
+    .main-content { flex: 1; min-width: 0; }
+    .sp-header { padding: 14px 16px 10px; border-bottom: 1px solid #bfdbfe; flex-shrink: 0; }
+    .sp-flow-label { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: #1473e6; color: white; padding: 2px 8px; border-radius: 3px; margin-bottom: 8px; }
+    .sp-step { font-size: 11px; font-weight: 600; color: #2563eb; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .sp-title { font-size: 13px; font-weight: 700; color: #1e3a5f; line-height: 1.4; }
+    .sp-body { padding: 14px 16px; overflow-y: auto; flex: 1; }
+    .sp-narrative { font-size: 12px; color: #374151; line-height: 1.65; margin-bottom: 14px; }
+    .sp-callouts { display: flex; flex-direction: column; gap: 10px; }
+    .sp-callout { display: flex; gap: 8px; align-items: flex-start; }
+    .sp-letter { width: 18px; height: 18px; background: #3b82f6; color: white; border-radius: 50%; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .sp-callout-text { font-size: 11.5px; color: #374151; line-height: 1.55; }
+    .sp-callout-text strong { color: #1e3a5f; font-weight: 600; }
+    .sp-next { margin-top: 14px; padding: 10px 12px; background: rgba(59,130,246,0.08); border: 1px solid #bfdbfe; border-radius: 5px; font-size: 11.5px; color: #374151; line-height: 1.5; }
+    .sp-next strong { color: #2563eb; font-weight: 600; }
+    .sp-footer { padding: 10px 16px 14px; border-top: 1px solid #bfdbfe; flex-shrink: 0; }
+    .sp-dots { display: flex; gap: 5px; align-items: center; margin-bottom: 6px; }
+    .sp-dot { width: 8px; height: 8px; border-radius: 50%; background: #bfdbfe; cursor: pointer; transition: background 0.15s; }
+    .sp-dot.active { background: #3b82f6; }
+    .sp-dot.done { background: #1d4ed8; }
+    .sp-nav { font-size: 10px; color: #2563eb; font-weight: 500; letter-spacing: 0.04em; }
+    @media (max-width: 960px) { .story-panel { display: none; } }
+
+    /* ===== SCREENS ===== */
+    .screen { display: none; }
+    .screen.active { display: block; animation: fadeUp 0.3s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ===== ENTRY SCREEN ===== */
+    .entry-wrap { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 96px); padding: 40px 24px; }
+    .entry-inner { width: 100%; max-width: 780px; }
+    .entry-heading { text-align: center; margin-bottom: 40px; }
+    .entry-heading h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.025em; margin-bottom: 6px; }
+    .entry-heading p { font-size: 14px; color: var(--text-light); }
+    .entry-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .uc-card { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--bg); cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
+    .uc-card:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(20,115,230,0.12); }
+    .uc-thumb { height: 120px; }
+    .uc-body { padding: 20px 22px 22px; }
+    .uc-part { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-light); margin-bottom: 8px; }
+    .uc-title { font-size: 17px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.01em; }
+    .uc-desc { font-size: 13px; color: var(--text-light); line-height: 1.6; margin-bottom: 16px; }
+    .uc-start { display: inline-flex; align-items: center; gap: 6px; background: var(--text); color: white; border: none; padding: 9px 18px; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; }
+    .uc-start:hover { background: #333; }
+
+    /* ===== UNDERLINE TABS ===== */
+    .tab-nav { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 28px; }
+    .tab-link { padding: 10px 0; margin-right: 28px; font-size: 14px; font-weight: 500; color: var(--text-light); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.15s, border-color 0.15s; user-select: none; }
+    .tab-link.active { color: var(--text); border-bottom-color: var(--accent); }
+    .tab-link:hover:not(.active) { color: var(--text); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeUp 0.25s ease; }
+
+    /* ===== HOME WRAP ===== */
+    .home-wrap { padding: 32px 40px 80px; max-width: 1020px; }
+    .page-title { font-size: 24px; font-weight: 600; letter-spacing: -0.025em; margin-bottom: 2px; }
+    .page-title .prop-code { color: var(--text-light); font-weight: 400; }
+    .change-prop { color: var(--accent); font-size: 13px; cursor: pointer; text-decoration: none; display: block; margin-bottom: 20px; }
+
+    /* ===== CHANNEL CARDS ===== */
+    .filter-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .search-input { display: flex; align-items: center; gap: 7px; border: 1px solid var(--border); border-radius: 4px; padding: 7px 12px; width: 210px; color: var(--text-faint); font-size: 13px; }
+    .filter-pills { display: flex; gap: 6px; }
+    .pill { padding: 5px 14px; border: 1px solid var(--border); border-radius: 20px; font-size: 12px; cursor: pointer; background: var(--bg); color: var(--text-light); }
+    .pill.on { background: var(--text); color: white; border-color: var(--text); }
+    .section-head { display: flex; align-items: center; gap: 8px; padding: 8px 0; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .section-label { font-size: 11px; font-weight: 500; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; }
+    .section-pill { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: var(--accent); color: white; }
+    .cards-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 36px; }
+    .card { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--bg); }
+    .card.featured { border-color: var(--accent); border-width: 1.5px; }
+    .card-thumb { height: 96px; }
+    .thumb-warm { background: linear-gradient(145deg, #b09070 0%, #7d5c3a 100%); }
+    .thumb-teal { background: linear-gradient(145deg, #5d8a8c 0%, #3a6264 100%); }
+    .thumb-slate { background: linear-gradient(145deg, #8a98aa 0%, #5c6a7a 100%); }
+    .thumb-navy { background: linear-gradient(145deg, #263350 0%, #151e35 100%); }
+    .thumb-fgrn { background: linear-gradient(145deg, #1e4d38 0%, #0f2e20 100%); }
+    .thumb-rust { background: linear-gradient(145deg, #6b2a0e 0%, #3e1508 100%); }
+    .thumb-wapp { background: linear-gradient(145deg, #3b7a57 0%, #1e4d35 100%); }
+    .thumb-push { background: linear-gradient(145deg, #435e7a 0%, #263850 100%); }
+    .card-body { padding: 14px 14px 16px; }
+    .card-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 500; margin-bottom: 8px; }
+    .badge.active { background: var(--green-bg); color: var(--green); }
+    .badge.inactive { background: var(--bg-soft); color: var(--text-light); }
+    .badge.scheduled { background: var(--amber-bg); color: var(--amber); }
+    .badge.expired { background: #f0f0f0; color: #888; }
+    .badge.new-ch { background: #dceeff; color: var(--accent); }
+    .badge.avail { background: var(--green-bg); color: var(--green); }
+    .badge.coming { background: var(--bg-soft); color: var(--text-faint); border: 1px solid var(--border); }
+    .card-meta { font-size: 12px; color: var(--text-light); line-height: 1.65; }
+    .card-sub-meta { font-size: 12px; color: var(--text-faint); margin-top: 2px; font-style: italic; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0; }
+    .content-tag { font-size: 12px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 3px; padding: 4px 10px; color: var(--text-light); display: inline-flex; align-items: center; gap: 6px; }
+    .reuse-sym { color: var(--amber); font-size: 16px; line-height: 1; }
+    .btn { display: block; width: 100%; text-align: center; padding: 8px 14px; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 6px; border: 1px solid transparent; font-family: inherit; }
+    .btn-manage { background: transparent; color: var(--accent); border-color: var(--border); }
+    .btn-manage:hover { background: var(--accent-bg); }
+    .btn-dim { background: transparent; color: var(--text-faint); border-color: var(--border); cursor: not-allowed; }
+    .btn-get-started-blue { background: var(--accent); color: white; border-color: var(--accent); }
+    .btn-get-started-green { background: #1a4d35; color: white; border-color: #1a4d35; }
+    .btn-explore { background: transparent; color: var(--amber); border-color: var(--amber); }
+    .btn-coming-soon { background: transparent; color: var(--text-faint); border-color: var(--border); cursor: default; }
+
+    /* ===== CONTENT LIBRARY ===== */
+    .lib-header-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+    .lib-page-sub { font-size: 13px; color: var(--text-light); margin-top: 2px; }
+    .primary-btn { display: inline-flex; align-items: center; gap: 7px; background: var(--text); color: white; border: none; padding: 9px 16px; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; }
+    .primary-btn:hover { background: #333; }
+    .stakeholder-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 24px; }
+    .sstat { background: var(--bg-soft); padding: 14px 16px; }
+    .sl { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .sv { font-size: 24px; font-weight: 600; margin-bottom: 2px; }
+    .sd { font-size: 11px; color: var(--text-faint); }
+
+    /* ===== ATTRIBUTE FILTER DROPDOWNS ===== */
+    .attr-filter-row { display: flex; align-items: flex-start; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .af-group { position: relative; }
+    .af-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 12px; border: 1px solid var(--border); border-radius: 4px;
+      background: var(--bg); color: var(--text); font-size: 13px; font-weight: 500;
+      cursor: pointer; font-family: inherit; white-space: nowrap;
+      transition: border-color 0.12s;
+    }
+    .af-btn:hover { border-color: #aaa; }
+    .af-btn.has-sel { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+    .af-count { background: var(--accent); color: white; font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 20px; }
+    .af-chevron { font-size: 10px; color: var(--text-faint); }
+    .af-panel {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; z-index: 50;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1); min-width: 160px; padding: 6px;
+    }
+    .af-panel.open { display: block; }
+    .af-option { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 4px; cursor: pointer; font-size: 13px; color: var(--text); }
+    .af-option:hover { background: var(--bg-soft); }
+    .af-option input { width: 14px; height: 14px; accent-color: var(--accent); cursor: pointer; }
+
+    /* Persona preview bar */
+    .persona-preview-bar { display: none; padding: 12px 16px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 16px; }
+    .persona-preview-bar.show { display: block; }
+    .ppb-label { font-size: 12px; color: var(--text-light); margin-bottom: 10px; }
+    .ppb-attrs { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .ppb-pair { display: flex; align-items: center; gap: 6px; }
+    .ppb-cat { font-size: 12px; color: var(--text-light); }
+    .ppb-chip { background: var(--text); color: white; font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 3px; }
+
+    /* Status filter (simplified) */
+    .status-filter-row { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+    .lib-search { display: flex; align-items: center; gap: 7px; border: 1px solid var(--border); border-radius: 4px; padding: 7px 12px; width: 200px; color: var(--text-faint); font-size: 13px; }
+
+    /* Amenity grid */
+    .cat-section { margin-bottom: 32px; }
+    .cat-head { display: flex; align-items: center; gap: 8px; padding: 8px 0; margin-bottom: 14px; border-bottom: 1px solid var(--border); cursor: pointer; }
+    .cat-toggle { font-size: 10px; color: var(--text-faint); }
+    .cat-label { font-size: 11px; font-weight: 500; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; flex: 1; }
+    .cat-count { font-size: 11px; color: var(--text-faint); }
+    .amenity-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .ac { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--bg); cursor: pointer; transition: border-color 0.15s, opacity 0.2s; }
+    .ac:hover { border-color: #aaa; }
+    .ac.filtered-out { display: none; }
+    .ac-thumb { height: 72px; position: relative; }
+    .th-dining { background: linear-gradient(145deg, #9b7060 0%, #5a3020 100%); }
+    .th-wellness { background: linear-gradient(145deg, #7a9898 0%, #3d5a5a 100%); }
+    .th-outdoor { background: linear-gradient(145deg, #7a9270 0%, #3d5022 100%); }
+    .th-meeting { background: linear-gradient(145deg, #6a7898 0%, #2e3858 100%); }
+    .th-transport { background: linear-gradient(145deg, #8a8a90 0%, #4a4a52 100%); }
+    .th-services { background: linear-gradient(145deg, #989078 0%, #5a5038 100%); }
+    .th-inactive { background: linear-gradient(145deg, #aaa 0%, #777 100%); }
+    .th-expired { background: linear-gradient(145deg, #ccc 0%, #999 100%); }
+    .pin-ribbon { position: absolute; top: 8px; right: 8px; background: var(--amber); color: white; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .ac-body { padding: 10px 12px 12px; }
+    .ac-name { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+    .cond-chips { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 7px; }
+    .ccx { font-size: 10px; padding: 2px 7px; border-radius: 3px; font-weight: 500; }
+    .ccx.type { background: #dceeff; color: #1473e6; }
+    .ccx.level { background: var(--amber-bg); color: var(--amber); }
+    .ccx.hist { background: #e6f4eb; color: var(--green); }
+    .ccx.season { background: #f3e8fb; color: #7c3aed; }
+    .ccx.pin { background: var(--amber-bg); color: var(--amber); }
+    .ccx.hol { background: #fff0dc; color: #c45000; }
+    .ac-meta { font-size: 11px; color: var(--text-light); line-height: 1.6; }
+    .reuse-tag { display: inline-flex; align-items: center; gap: 6px; color: var(--amber); font-weight: 500; font-size: 12px; }
+    .btn-manage-card { display: block; width: 100%; text-align: center; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 500; cursor: pointer; margin-top: 8px; border: 1px solid var(--border); background: transparent; color: var(--accent); font-family: inherit; }
+    .btn-manage-card:hover { background: var(--accent-bg); }
+
+    /* ===== VERSIONS SCREEN ===== */
+    .versions-wrap { padding: 32px 40px 80px; max-width: 780px; }
+    .breadcrumb { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+    .breadcrumb a { color: var(--accent); cursor: pointer; text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb .sep { color: var(--text-faint); margin: 0 2px; }
+    .ver-card { border: 1px solid var(--border); border-radius: 8px; background: white; overflow: hidden; display: flex; align-items: stretch; margin-bottom: 12px; cursor: pointer; transition: border-color 0.15s; }
+    .ver-card:hover { border-color: #aaa; }
+    .ver-card.featured { border: 1.5px solid var(--accent); }
+    .ver-swatch { width: 120px; flex-shrink: 0; }
+    .ver-body { flex: 1; padding: 16px 20px; }
+    .ver-arrow { display: flex; align-items: center; padding: 0 18px; }
+    .ver-name { font-size: 15px; font-weight: 600; }
+    .ver-meta { font-size: 12px; color: var(--text-light); margin: 6px 0 10px; }
+    .ver-tags { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .ver-tag { font-size: 11px; padding: 2px 8px; border-radius: 3px; }
+    .ver-tag.type { background: #dceeff; color: var(--accent); }
+    .ver-tag.all { background: var(--bg-soft); color: var(--text-light); }
+    .ver-tag.meta { font-size: 11px; color: var(--text-faint); }
+    .ver-tag.current { background: var(--accent-bg); color: var(--accent); font-weight: 500; }
+
+    /* ===== CHAT ===== */
+    .chat-wrap { max-width: 640px; margin: 0 auto; padding: 32px 24px 100px; }
+    .context-strip { display: flex; align-items: center; gap: 12px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin-bottom: 36px; }
+    .context-icon { width: 34px; height: 34px; background: var(--text); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .context-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+    .context-name { font-size: 14px; font-weight: 500; }
+    .thread { display: flex; flex-direction: column; gap: 14px; }
+    .msg { max-width: 82%; animation: msgIn 0.22s ease; }
+    @keyframes msgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .msg.sys { align-self: flex-start; }
+    .msg.usr { align-self: flex-end; }
+    .bubble { padding: 11px 16px; border-radius: 8px; font-size: 15px; line-height: 1.6; }
+    .msg.sys .bubble { background: var(--bg-soft); border: 1px solid var(--border); }
+    .msg.usr .bubble { background: var(--text); color: white; }
+    .chips-row { display: flex; flex-wrap: wrap; gap: 8px; animation: msgIn 0.22s ease; }
+    .chip { padding: 8px 20px; border: 1px solid var(--border); border-radius: 20px; font-size: 14px; cursor: pointer; background: var(--bg); transition: background 0.12s; font-family: inherit; }
+    .chip:hover { background: var(--bg-soft); border-color: #aaa; }
+    /* Guided chip glow for demo */
+    .chip.guide {
+      border-color: var(--accent);
+      animation: chipGlow 1.8s ease-in-out infinite;
+    }
+    @keyframes chipGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(20,115,230,0.15); border-color: var(--accent); }
+      50% { box-shadow: 0 0 0 4px rgba(20,115,230,0.18); border-color: var(--accent); }
+    }
+    .build-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--text); color: white; border: none; padding: 13px 28px; border-radius: 6px; font-size: 15px; font-weight: 500; cursor: pointer; animation: msgIn 0.28s ease; font-family: inherit; }
+    .build-btn:hover { background: #333; }
+    /* Amenity textarea input */
+    .amenity-textarea-wrap { animation: msgIn 0.25s ease; }
+    .amenity-textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; line-height: 1.6; resize: vertical; min-height: 80px; font-family: inherit; color: var(--text); }
+    .amenity-textarea:focus { outline: none; border-color: var(--accent); }
+    .amenity-textarea::placeholder { color: var(--text-faint); }
+    .amenity-suggest { margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+    .suggest-label { font-size: 12px; color: var(--text-faint); }
+    .suggest-chip { padding: 7px 14px; border: 1.5px solid var(--accent); border-radius: 20px; font-size: 13px; cursor: pointer; background: var(--accent-bg); color: var(--accent); font-family: inherit; animation: chipGlow 1.8s ease-in-out infinite; }
+    .suggest-chip:hover { background: var(--accent); color: white; }
+    .amenity-send { display: inline-flex; align-items: center; gap: 8px; background: var(--text); color: white; border: none; padding: 10px 22px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 10px; font-family: inherit; }
+
+    /* ===== ANALYZING ===== */
+    .analyzing-wrap { max-width: 520px; margin: 0 auto; padding: 64px 24px 80px; text-align: center; }
+    .analyzing-title { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .analyzing-sub { font-size: 15px; color: var(--text-light); margin-bottom: 36px; }
+    .steps-box { text-align: left; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 20px; }
+    .step-row { display: flex; align-items: center; gap: 12px; padding: 13px 18px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text-faint); opacity: 0; transition: opacity 0.3s, color 0.3s; }
+    .step-row:last-child { border-bottom: none; }
+    .step-row.vis { opacity: 1; color: var(--text-light); }
+    .step-row.done-row { color: var(--text); }
+    .step-icon { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .step-icon.spin { border-color: var(--accent) transparent; animation: spin 0.75s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .step-icon.done { background: var(--green); border-color: var(--green); }
+    .summary-box { text-align: left; border: 1px solid var(--border); border-radius: 8px; padding: 20px 22px; margin-bottom: 28px; opacity: 0; transform: translateY(8px); transition: opacity 0.4s, transform 0.4s; }
+    .summary-box.vis { opacity: 1; transform: translateY(0); }
+    .summary-eyebrow { font-size: 11px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+    .summary-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .summary-row:last-child { border-bottom: none; }
+    .sum-badges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 1px; flex-shrink: 0; }
+    .sum-badge { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 3px; white-space: nowrap; }
+    .sum-badge.ind { background: #dceeff; color: var(--accent); }
+    .sum-badge.biz { background: #e8f4fd; color: #0e6bb0; }
+    .sum-badge.new { background: var(--green-bg); color: var(--green); }
+    .sum-badge.def { background: var(--amber-bg); color: var(--amber); }
+    .sum-name { font-size: 13px; font-weight: 500; }
+    .sum-desc { font-size: 12px; color: var(--text-light); }
+    .view-btn { display: none; padding: 13px 32px; background: var(--text); color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; }
+    .view-btn.vis { display: inline-block; animation: fadeUp 0.35s ease; }
+    .view-btn:hover { background: #333; }
+
+    /* ===== EMAIL PREVIEW ===== */
+    .email-wrap { padding: 28px 32px 80px; max-width: 1120px; }
+    /* Full-width persona tab bar */
+    .persona-tab-bar { display: flex; width: 100%; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 20px; }
+    .ptab-btn { flex: 1; padding: 10px 16px; border: none; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: inherit; text-align: center; white-space: nowrap; }
+    .ptab-btn.active { background: var(--text); color: white; }
+    .ptab-btn.inactive { background: var(--bg); color: var(--text-light); }
+    .ptab-btn.inactive:hover { background: var(--bg-soft); }
+    /* Email + editing panel side by side */
+    .email-editing-row { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .email-frame { flex: 1; min-width: 0; transition: opacity 0.25s, transform 0.25s; }
+    .email-frame.annos-off .bbadge { display: none !important; }
+
+    /* Editing Panel */
+    .editing-panel { width: 268px; flex-shrink: 0; border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+    .ep-header { display: flex; align-items: center; gap: 8px; padding: 12px 14px; background: var(--bg-soft); border-bottom: 1px solid var(--border); }
+    .ep-collapse { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 3px; cursor: pointer; font-size: 11px; color: var(--text-faint); background: var(--bg); }
+    .ep-title { font-size: 13px; font-weight: 600; flex: 1; }
+    .ep-section { border-bottom: 1px solid var(--border); }
+    .ep-section:last-child { border-bottom: none; }
+    .ep-section-hdr { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; }
+    .ep-section-hdr:hover { background: var(--bg-soft); }
+    .ep-icon { width: 28px; height: 28px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ep-section-info { flex: 1; }
+    .ep-section-label { font-size: 12px; font-weight: 500; }
+    .ep-section-sub { font-size: 11px; color: var(--text-faint); margin-top: 1px; }
+    .ep-chevron { font-size: 11px; color: var(--text-faint); }
+    .ep-body { padding: 14px; border-top: 1px solid var(--border); background: var(--bg); display: none; }
+    .ep-body.open { display: block; }
+    .ep-field-label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .ep-label-text { font-size: 12px; font-weight: 500; }
+    .ep-char-count { font-size: 11px; color: var(--text-faint); }
+    .ep-textarea { width: 100%; padding: 9px 11px; border: 1.5px solid var(--accent); border-radius: 4px; font-size: 12px; line-height: 1.55; resize: vertical; min-height: 72px; font-family: inherit; color: var(--text); }
+    .ep-textarea:focus { outline: none; }
+    .ep-actions { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+    .ep-revert { padding: 7px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-weight: 500; cursor: pointer; background: var(--bg); color: var(--text-light); font-family: inherit; }
+    .ep-revert:hover { background: var(--bg-soft); }
+    .ep-generate { display: flex; align-items: center; gap: 5px; padding: 7px 14px; background: var(--purple); color: white; border: none; border-radius: 4px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; }
+    .ep-generate:hover { background: #5a2d8a; }
+
+    /* Email frame internals */
+    .email-hero { height: 180px; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; transition: background 0.3s; }
+    .hero-h { font-size: 20px; font-weight: 600; color: white; margin-bottom: 4px; }
+    .hero-p { font-size: 13px; color: rgba(255,255,255,0.85); }
+    .email-section { padding: 20px; border-bottom: 1px solid var(--border); }
+    .email-section:last-child { border-bottom: none; }
+    .email-section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); margin-bottom: 10px; }
+    .email-intro { font-size: 13px; color: var(--text); line-height: 1.65; }
+    .email-amenity { padding: 14px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 10px; background: var(--bg); }
+    .email-amenity:last-child { margin-bottom: 0; }
+    .bbadge-row { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 6px; }
+    .bbadge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 3px; }
+    .bbadge.ind { background: #dceeff; color: var(--accent); }
+    .bbadge.biz { background: #e0f0ff; color: #0e6bb0; }
+    .bbadge.new-b { background: var(--green-bg); color: var(--green); }
+    .bbadge.def { background: var(--amber-bg); color: var(--amber); }
+    .bbadge.std { background: var(--bg-soft); color: var(--text-light); }
+    .amenity-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .amenity-desc { font-size: 12px; color: var(--text-light); line-height: 1.55; }
+    .email-cta-btn { display: block; width: 100%; text-align: center; padding: 11px; background: var(--text); color: white; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; font-family: inherit; }
+
+    .exit-bar { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+    .exit-back { padding: 9px 20px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; background: var(--bg); color: var(--text-light); font-family: inherit; }
+    .exit-fwd { display: flex; align-items: center; gap: 7px; padding: 9px 20px; background: var(--text); color: white; border: none; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; }
+
+    /* ===== TOAST ===== */
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--text); color: white; padding: 12px 20px; border-radius: 8px; font-size: 14px; display: flex; align-items: center; gap: 8px; opacity: 0; transition: all 0.3s ease; z-index: 1000; }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- ===== CHROME ===== -->
+<div class="adobe-bar">
+  <div class="adobe-nav">
+    <div class="adobe-brand">
+      <div class="adobe-logo">Ae</div>
+      <span>Adobe Experience Cloud</span>
+    </div>
+    <button class="home-icon-btn" onclick="goHome()" title="Back to demo home" style="margin-left:12px;">
+      <svg width="16" height="16" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </button>
+  </div>
+  <div class="adobe-icons">
+    <svg width="18" height="18" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <svg width="18" height="18" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+    <div class="user-avatar">MM</div>
+  </div>
+</div>
+<div class="marriott-bar">
+  <div class="m-lockup">
+    <div class="m-logo">M</div>
+    <span class="property-name">Marriott Experience Layer</span>
+  </div>
+  <button class="bar-btn">JW Marriott Houston ▼</button>
+</div>
+
+<!-- ===== PAGE LAYOUT ===== -->
+<div class="page-layout">
+
+  <!-- STORY PANEL -->
+  <aside class="story-panel">
+    <div class="sp-header">
+      <div class="sp-flow-label" id="sp-flow-label">Demo Flow</div>
+      <div class="sp-step" id="sp-step">—</div>
+      <div class="sp-title" id="sp-title">Choose a use case to begin</div>
+    </div>
+    <div class="sp-body">
+      <div class="sp-narrative" id="sp-narrative">Select Part 1 or Part 2 from the demo home screen to start the story.</div>
+      <div class="sp-callouts" id="sp-callouts"></div>
+    </div>
+    <div class="sp-footer">
+      <div class="sp-dots" id="sp-dots"></div>
+      <div class="sp-nav" id="sp-nav">MEL · JW Marriott Houston</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+
+    <!-- ====================================================
+         SCREEN: ENTRY
+         ==================================================== -->
+    <div id="screen-entry" class="screen active">
+      <div class="entry-wrap">
+        <div class="entry-inner">
+          <div class="entry-heading">
+            <h1>Marriott Experience Layer</h1>
+            <p>JW Marriott Houston Downtown (HWSJW) — Choose a demo flow</p>
+          </div>
+          <div class="entry-cards">
+            <div class="uc-card" onclick="startAmenityFlow()">
+              <div class="uc-thumb" style="background:linear-gradient(145deg,#6a7898 0%,#2e3858 100%);"></div>
+              <div class="uc-body">
+                <div class="uc-part">Part 1</div>
+                <div class="uc-title">Create a New Amenity</div>
+                <div class="uc-desc">Mary uses the AI assistant to create an Executive Meeting Package and add it to the content library with smart conditions.</div>
+                <button class="uc-start">Start →</button>
+              </div>
+            </div>
+            <div class="uc-card" onclick="startEmailFlow()">
+              <div class="uc-thumb" style="background:linear-gradient(145deg,#b09070 0%,#7d5c3a 100%);"></div>
+              <div class="uc-body">
+                <div class="uc-part">Part 2</div>
+                <div class="uc-title">Create a Pre-Arrival Email Version</div>
+                <div class="uc-desc">Mary assembles a personalized email for Individual Business travelers — pulling from the amenity library she built in Part 1.</div>
+                <button class="uc-start">Start →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================
+         SCREEN: HOME (Channels + Content Library tabs)
+         ==================================================== -->
+    <div id="screen-home" class="screen">
+      <div class="home-wrap">
+        <h1 class="page-title">JW Marriott Houston <span class="prop-code">(HWSJW)</span></h1>
+        <a class="change-prop">Change Property ↓</a>
+
+        <nav class="tab-nav">
+          <a class="tab-link" id="nav-channels" onclick="switchTab('channels')">Channels</a>
+          <a class="tab-link" id="nav-content-library" onclick="switchTab('content-library')">Content Library</a>
+        </nav>
+
+        <!-- ── CHANNELS ── -->
+        <div class="tab-pane" id="pane-channels">
+          <div class="filter-row">
+            <div class="search-input">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              Search by name...
+            </div>
+            <div class="filter-pills">
+              <span class="pill">Show All (14)</span>
+              <span class="pill on">× Active (5)</span>
+              <span class="pill">Inactive (4)</span>
+              <span class="pill">Expired (5)</span>
+            </div>
+          </div>
+
+          <div class="section-head">
+            <span style="font-size:11px;color:var(--text-faint);">▲</span>
+            <span class="section-label">Guest Touchpoints</span>
+          </div>
+          <div class="cards-row">
+            <div class="card featured">
+              <div class="card-thumb thumb-warm"></div>
+              <div class="card-body">
+                <div class="card-name">Pre-Arrival Email</div>
+                <span class="badge active"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg> Active</span>
+                <div class="card-meta">Active since Jan 1, 2025<br>Draft edits last saved Apr 18, 2025</div>
+                <div class="tag-row">
+                  <span class="content-tag"><span class="reuse-sym">⟲</span> 4 content blocks used across 3 channels</span>
+                </div>
+                <button class="btn btn-manage" onclick="showScreen('screen-versions')">Manage</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-thumb thumb-teal"></div>
+              <div class="card-body">
+                <div class="card-name">Travel Planner</div>
+                <span class="badge active"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg> Active</span>
+                <div class="card-meta">Active since Jan 1, 2025<br>Draft edits last saved Apr 18, 2025</div>
+                <div style="height:32px;"></div>
+                <button class="btn btn-manage" style="margin-top:2px;">Manage</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-thumb thumb-slate"></div>
+              <div class="card-body">
+                <div class="card-name">Day-Of Welcome</div>
+                <span class="badge inactive">Inactive</span>
+                <div class="card-meta">Last active Dec 2024<br>No draft edits</div>
+                <div style="height:32px;"></div>
+                <button class="btn btn-dim" disabled style="margin-top:2px;">Manage</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-head">
+            <span style="font-size:11px;color:var(--text-faint);">▲</span>
+            <span class="section-label">New Guest Comms Channels</span>
+            <span class="section-pill">3 New</span>
+          </div>
+          <div class="cards-row">
+            <div class="card">
+              <div class="card-thumb thumb-navy"></div>
+              <div class="card-body">
+                <div class="card-name">Lobby Screens</div>
+                <span class="badge new-ch">New Channel</span>
+                <div class="card-meta">Connected Apr 2025</div>
+                <div class="card-meta" style="margin-top:6px;">AI playlist ready from your existing content — including Business Traveler blocks</div>
+                <button class="btn btn-get-started-blue" style="margin-top:12px;">Get started →</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-thumb thumb-fgrn"></div>
+              <div class="card-body">
+                <div class="card-name">GRE Screens</div>
+                <span class="badge new-ch">New Channel</span>
+                <div class="card-meta">Connected Apr 2025</div>
+                <div class="card-meta" style="margin-top:6px;">Guest Relations desk screens — check-in info, upgrades, amenity highlights</div>
+                <button class="btn btn-get-started-green" style="margin-top:12px;">Get started →</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-thumb thumb-rust"></div>
+              <div class="card-body">
+                <div class="card-name">Outbound Marketing</div>
+                <span class="badge avail">Available</span>
+                <div class="card-meta">Reach potential Business Travelers</div>
+                <div class="card-meta" style="margin-top:6px;">Requires regional approval before sending</div>
+                <button class="btn btn-explore" style="margin-top:12px;">Explore →</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-head">
+            <span style="font-size:11px;color:var(--text-faint);">▲</span>
+            <span class="section-label">Direct Messaging &amp; Push Notifications</span>
+          </div>
+          <div class="cards-row">
+            <div class="card">
+              <div class="card-thumb thumb-wapp"></div>
+              <div class="card-body">
+                <div class="card-name">WhatsApp</div>
+                <span class="badge coming">Coming Soon</span>
+                <div class="card-meta">Guest messaging for check-in, upgrades &amp; requests</div>
+                <div class="card-sub-meta" style="margin-top:4px;">Direct-to-guest channel — Leigh Initiative</div>
+                <button class="btn btn-coming-soon" disabled style="margin-top:12px;">Coming Soon</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-thumb thumb-push"></div>
+              <div class="card-body">
+                <div class="card-name">Push Notifications</div>
+                <span class="badge coming">Coming Soon</span>
+                <div class="card-meta">Mobile app notifications for Bonvoy members</div>
+                <div class="card-sub-meta" style="margin-top:4px;">Real-time push — Marriott Bonvoy app</div>
+                <button class="btn btn-coming-soon" disabled style="margin-top:12px;">Coming Soon</button>
+              </div>
+            </div>
+          </div>
+        </div><!-- /pane-channels -->
+
+        <!-- ── CONTENT LIBRARY ── -->
+        <div class="tab-pane" id="pane-content-library">
+          <div class="lib-header-row">
+            <div>
+              <div class="page-title" style="font-size:20px;">Amenity Library</div>
+              <div class="lib-page-sub">JW Marriott Houston Downtown · 20 amenities</div>
+            </div>
+            <button class="primary-btn" onclick="goToAmenityChat()">
+              <svg width="13" height="13" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              Create New Amenity
+            </button>
+          </div>
+
+          <div class="stakeholder-strip">
+            <div class="sstat"><div class="sl">Active</div><div class="sv">12</div><div class="sd">Showing in live emails</div></div>
+            <div class="sstat"><div class="sl">Scheduled</div><div class="sv">4</div><div class="sd">Activating this season</div></div>
+            <div class="sstat"><div class="sl">Inactive</div><div class="sv">3</div><div class="sd">Conditions not currently met</div></div>
+            <div class="sstat"><div class="sl">Tied to campaigns</div><div class="sv">18</div><div class="sd">Across 6 email versions</div></div>
+          </div>
+
+          <!-- Attribute filter dropdowns -->
+          <div class="attr-filter-row" id="attr-filter-row">
+            <!-- Level -->
+            <div class="af-group" id="afg-level">
+              <button class="af-btn" id="afb-level" onclick="toggleDD('level', event)">
+                Level <span class="af-count" id="afc-level" style="display:none">0</span>
+                <span class="af-chevron">▾</span>
+              </button>
+              <div class="af-panel" id="afp-level">
+                <label class="af-option"><input type="checkbox" data-group="level" value="Premium" onchange="onFilterChange()"> Premium</label>
+                <label class="af-option"><input type="checkbox" data-group="level" value="Silver Elite" onchange="onFilterChange()"> Silver Elite</label>
+                <label class="af-option"><input type="checkbox" data-group="level" value="Elite" onchange="onFilterChange()"> Elite</label>
+                <label class="af-option"><input type="checkbox" data-group="level" value="Gold" onchange="onFilterChange()"> Gold</label>
+                <label class="af-option"><input type="checkbox" data-group="level" value="Silver" onchange="onFilterChange()"> Silver</label>
+                <label class="af-option"><input type="checkbox" data-group="level" value="Non-member" onchange="onFilterChange()"> Non-member</label>
+              </div>
+            </div>
+            <!-- Traveler -->
+            <div class="af-group" id="afg-traveler">
+              <button class="af-btn" id="afb-traveler" onclick="toggleDD('traveler', event)">
+                Traveler <span class="af-count" id="afc-traveler" style="display:none">0</span>
+                <span class="af-chevron">▾</span>
+              </button>
+              <div class="af-panel" id="afp-traveler">
+                <label class="af-option"><input type="checkbox" data-group="traveler" value="Business" onchange="onFilterChange()"> Business</label>
+                <label class="af-option"><input type="checkbox" data-group="traveler" value="Leisure" onchange="onFilterChange()"> Leisure</label>
+              </div>
+            </div>
+            <!-- Season -->
+            <div class="af-group" id="afg-season">
+              <button class="af-btn" id="afb-season" onclick="toggleDD('season', event)">
+                Season <span class="af-count" id="afc-season" style="display:none">0</span>
+                <span class="af-chevron">▾</span>
+              </button>
+              <div class="af-panel" id="afp-season">
+                <label class="af-option"><input type="checkbox" data-group="season" value="Winter" onchange="onFilterChange()"> Winter</label>
+                <label class="af-option"><input type="checkbox" data-group="season" value="Summer" onchange="onFilterChange()"> Summer</label>
+                <label class="af-option"><input type="checkbox" data-group="season" value="Spring" onchange="onFilterChange()"> Spring</label>
+                <label class="af-option"><input type="checkbox" data-group="season" value="Fall" onchange="onFilterChange()"> Fall</label>
+                <label class="af-option"><input type="checkbox" data-group="season" value="Winter Holiday" onchange="onFilterChange()"> Winter Holiday</label>
+                <label class="af-option"><input type="checkbox" data-group="season" value="Wedding" onchange="onFilterChange()"> Wedding</label>
+              </div>
+            </div>
+            <!-- History -->
+            <div class="af-group" id="afg-history">
+              <button class="af-btn" id="afb-history" onclick="toggleDD('history', event)">
+                History <span class="af-count" id="afc-history" style="display:none">0</span>
+                <span class="af-chevron">▾</span>
+              </button>
+              <div class="af-panel" id="afp-history">
+                <label class="af-option"><input type="checkbox" data-group="history" value="Returning" onchange="onFilterChange()"> Returning</label>
+                <label class="af-option"><input type="checkbox" data-group="history" value="New member" onchange="onFilterChange()"> New member</label>
+              </div>
+            </div>
+            <!-- Type -->
+            <div class="af-group" id="afg-type">
+              <button class="af-btn" id="afb-type" onclick="toggleDD('type', event)">
+                Type <span class="af-count" id="afc-type" style="display:none">0</span>
+                <span class="af-chevron">▾</span>
+              </button>
+              <div class="af-panel" id="afp-type">
+                <label class="af-option"><input type="checkbox" data-group="type" value="Individual" onchange="onFilterChange()"> Individual</label>
+                <label class="af-option"><input type="checkbox" data-group="type" value="Group" onchange="onFilterChange()"> Group</label>
+              </div>
+            </div>
+            <button class="af-btn" id="af-clear-btn" onclick="clearAllFilters()" style="display:none; color:var(--text-light); border-color:transparent; background:transparent;">Clear all</button>
+          </div>
+
+          <!-- Persona preview bar -->
+          <div class="persona-preview-bar" id="persona-preview-bar">
+            <div class="ppb-label">Previewing for persona:</div>
+            <div class="ppb-attrs" id="ppb-attrs"></div>
+          </div>
+
+          <!-- Status filter (simplified) -->
+          <div class="status-filter-row">
+            <div class="lib-search">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              Search amenities...
+            </div>
+            <span class="pill on">All (20)</span>
+            <span class="pill">Active (12)</span>
+            <span class="pill">Inactive (3)</span>
+          </div>
+
+          <!-- Dining -->
+          <div class="cat-section">
+            <div class="cat-head"><span class="cat-toggle">▲</span><span class="cat-label">Dining</span><span class="cat-count">(5)</span></div>
+            <div class="amenity-grid">
+              <div class="ac" data-traveler="business,leisure" data-type="group">
+                <div class="ac-thumb th-dining"></div>
+                <div class="ac-body"><div class="ac-name">Group Dining Package</div>
+                  <span class="badge active"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg> Active</span>
+                  <div class="cond-chips"><span class="ccx type">Group</span><span class="ccx level">Any tier</span></div>
+                  <div class="ac-meta"><span class="reuse-tag"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"/></svg>3 content blocks used across 3 channels</span></div>
+                  <div class="ac-meta" style="font-size:11px;color:var(--text-faint);">Tied to 4 email versions</div>
+                  <button class="btn-manage-card">Manage</button></div>
+              </div>
+              <div class="ac" data-traveler="leisure" data-level="premium,elite">
+                <div class="ac-thumb th-dining"></div>
+                <div class="ac-body"><div class="ac-name">Chef's Table Experience</div>
+                  <span class="badge active"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg> Active</span>
+                  <div class="cond-chips"><span class="ccx type">Leisure</span><span class="ccx level">Premium · Elite</span></div>
+                  <div class="ac-meta"><span class="reuse-tag"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"/></svg>2 content blocks used across 1 channel</span></div>
+                  <button class="btn-manage-card">Manage</button></div>
+              </div>
+              <div class="ac" data-level="gold,elite" data-season="holiday">
+                <div class="ac-thumb th-dining"></div>
+                <div class="ac-body"><div class="ac-name">Holiday Dining Offer</div>
+                  <span class="badge inactive">Inactive</span>
+                  <div class="cond-chips"><span class="ccx hol">Holiday</span><span class="ccx level">Gold · Elite</span></div>
+                  <button class="btn-manage-card">Manage</button></div>
+              </div>
+              <div class="ac" data-traveler="business" data-type="individual" data-history="new">
+                <div class="ac-thumb th-dining"></div>
+                <div class="ac-body"><div class="ac-name">Welcome Business Rate</div>
+                  <span class="badge active"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg> Active</span>
+                  <div class="cond-chips"><span class="ccx type">Business</span><span class="ccx hist">New guest</span></div>
+                  <div class="ac-meta"><span class="reuse-tag"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"/></svg>3 content blocks used across 2 channels</span></div>
+                  <button class="btn-manage-card">Manage</button></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wellness -->
+          <div class="cat-section">
+            <div class="cat-head"><span class="cat-toggle">▲</span><span class="cat-label">Wellness &amp; Spa</span><span class="cat-count">(4)</span></div>
+            <div class="amenity-grid">
+              <div class="ac" data-traveler="leisure" data-level="premium,elite">
+                <div class="ac-thumb th-wellness" style="position:relative;"><div class="pin-ribbon">Pinned</div></div>
+                <div class="ac-body"><div class="ac-name">Spa &amp; Wellness Access</div>
+                  <span class="badge active"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg> Active</span>
+                  <div class="cond-chips"><span class="ccx type">Leisure</span><span class="ccx level">Premium · Elite</span><span class="ccx pin">Pinned: Group BT v2</span></div>
+                  <div class="ac-meta"><span class="reuse-tag"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"/></svg>3 content blocks used across 3 channels</span></div>
+                  <button class="btn-manage-card">Manage</button></div>
+              </div>
+              <div class="ac" data-type="group" data-season="spring,summer" data-history="returning">
+                <div class="ac-thumb th-outdoor"></div>
+                <div class="ac-body"><div class="ac-name">Outdoor Yoga Retreat</div>
+                  <span class="badge scheduled">Scheduled</span>
+                  <div class="cond-chips"><span class="ccx type">Group</span><span class="ccx season">Spring · Summer</span></div>
+                  <div class="ac-meta"><span class="reuse-tag"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"/></svg>2 content blocks used across 1 channel</span></div>
+                <div class="ac-thumb th-wellness"></div>
+                <div class="ac-body"><div class="ac-name">Winter Thermal Suite</div>
+                  <span class="badge scheduled">Scheduled</span>
+                  <div class="cond-chips"><span class="ccx season">Winter</span><span class="ccx level">Premium · Gold</span></div>
+                  <div class="ac-meta"><span class="reuse-tag"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"/></svg>2 content blocks used across 2 channels</span></div>
+                  <button class="btn-manage-card">Manage</button></div>
+              </div>
+              <div class="ac" data-season="summer" data-traveler="leisure">
+                <div class="ac-thumb th-inactive"></div>
+                <div class="ac-body"><div class="ac-name">Pool Cabana Upgrade</div>
+                  <span class="badge inactive">Inactive</span>
+                  <div class="cond-chips"><span class="ccx season">Summer</span><span class="ccx type">Leisure</span></div>
+                  <button class="btn-manage-card">Manage</button></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Experiences -->
+          <div class="cat-section">
+            <div class="cat-head"><span class="cat-toggle">▲</span><span class="cat-label">Experiences &amp; Services</span><span class="cat-count">(5)</span></div>
+            <div class="amenity-grid">
+              <div class="ac" id="ac-exec-meeting" data-traveler="business" data-type="individual,group" data-level="elite,gold">
+                <div class="ac-thumb th-meeting"></div>
+                <div class="ac-body"><div class="ac-name">Executive Meeting Package</div>
+                  <span class="badge active" style="background:#dcfce7;color:#166534;">✦ New</span>
+                  <div class="cond-chips"><span class="ccx type">Individual</span><span class="ccx type">Business</span><span class="ccx level">Elite · Gold</span></div>
+                  <div class="ac-meta"><span class="reuse-tag"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"/></svg>3 content blocks used across 3 channels</span></div>
+                  <div class="ac-meta" style="font-size:11px;color:var(--text-faint);">Created in Part 1</div>
+                  <button class="btn-manage-card">Manage</button></div>
+              </div>
+              <div class="ac" data-traveler="business" data-type="individual" data-level="premium,elite,gold">
+                <div class="ac-thumb th-transport"></div>
+                <div class="ac-body"><div class="ac-name">Airport Transfer Service</div>
+                  <span class="badge active"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg> Active</span>
+                  <div class="cond-chips"><span class="ccx type">Individual</span><span class="ccx type">Business</span><span class="ccx level">Premium · Elite</span></div>
+                  <div class="ac-meta"><span class="reuse-tag"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"/></svg>3 content blocks used across 2 channels</span></div>
+                  <button class="btn-manage-card">Manage</button></div>
+              </div>
+              <div class="ac" data-level="premium,elite" data-history="returning">
+                <div class="ac-thumb th-services"></div>
+                <div class="ac-body"><div class="ac-name">Early Check-In Offer</div>
+                  <span class="badge active"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg> Active</span>
+                  <div class="cond-chips"><span class="ccx level">Premium · Elite</span><span class="ccx hist">Returning</span></div>
+                  <div class="ac-meta"><span class="reuse-tag"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"/></svg>3 content blocks used across 2 channels</span></div>
+                  <button class="btn-manage-card">Manage</button></div>
+              </div>
+              <div class="ac">
+                <div class="ac-thumb th-expired"></div>
+                <div class="ac-body"><div class="ac-name">Holiday Concierge Package</div>
+                  <span class="badge expired">Expired</span>
+                  <div class="cond-chips"><span class="ccx hol">Holiday</span></div>
+                  <button class="btn-manage-card">Manage</button></div>
+              </div>
+            </div>
+          </div>
+        </div><!-- /pane-content-library -->
+
+      </div>
+    </div><!-- /screen-home -->
+
+    <!-- ====================================================
+         SCREEN: VERSIONS DASHBOARD
+         ==================================================== -->
+    <div id="screen-versions" class="screen">
+      <div class="versions-wrap">
+        <div class="breadcrumb">
+          <a onclick="showScreen('screen-home'); switchTab('channels');">← Channels</a>
+          <span class="sep">/</span>
+          <span style="color:var(--text);font-weight:500;">Pre-Arrival Email</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h1 style="font-size:22px;font-weight:600;letter-spacing:-0.02em;">Pre-Arrival Email Versions</h1>
+            <div style="font-size:13px;color:var(--text-light);margin-top:4px;">JW Marriott Houston Downtown · 3 active versions</div>
+          </div>
+          <button class="primary-btn" onclick="goToEmailChat()">+ Create New Version</button>
+        </div>
+
+        <div class="ver-card featured" onclick="goToEmailChat()">
+          <div class="ver-swatch" style="background:linear-gradient(145deg,#7a9280,#2e4e44);"></div>
+          <div class="ver-body">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+              <span class="ver-name">Individual Business Guest</span>
+              <span class="badge active"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg> Active</span>
+              <span class="ver-tag current">Current Demo</span>
+            </div>
+            <div class="ver-meta">Targets individual business travelers · 2 individual business amenity blocks · 1 default</div>
+            <div class="ver-tags">
+              <span class="ver-tag type">Individual</span>
+              <span class="ver-tag type">Business</span>
+              <span class="ver-tag meta">Last edited Apr 18, 2025</span>
+            </div>
+          </div>
+          <div class="ver-arrow"><svg width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+
+        <div class="ver-card">
+          <div class="ver-swatch" style="background:linear-gradient(145deg,#9b7e6a,#4a2e20);"></div>
+          <div class="ver-body">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+              <span class="ver-name">Default Guest</span>
+              <span class="badge active"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="currentColor"/></svg> Active</span>
+            </div>
+            <div class="ver-meta">Standard email when no specific persona is matched · All default blocks</div>
+            <div class="ver-tags">
+              <span class="ver-tag all">All guests</span>
+              <span class="ver-tag meta">Last edited Mar 2, 2025</span>
+            </div>
+          </div>
+          <div class="ver-arrow"><svg width="16" height="16" fill="none" stroke="var(--text-faint)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+
+        <div class="ver-card" style="opacity:0.7;">
+          <div class="ver-swatch" style="background:linear-gradient(145deg,#888,#555);"></div>
+          <div class="ver-body">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+              <span class="ver-name">Leisure Guest</span>
+              <span class="badge inactive">Draft</span>
+            </div>
+            <div class="ver-meta">In progress · Leisure traveler blocks selected, not yet published</div>
+            <div class="ver-tags">
+              <span class="ver-tag all">Leisure travelers</span>
+              <span class="ver-tag meta">Last edited Apr 1, 2025</span>
+            </div>
+          </div>
+          <div class="ver-arrow"><svg width="16" height="16" fill="none" stroke="var(--text-faint)" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================
+         SCREEN: EMAIL CHAT (guided — Individual Business)
+         ==================================================== -->
+    <div id="screen-chat-email" class="screen">
+      <div class="chat-wrap">
+        <div class="breadcrumb" style="margin-bottom:24px;">
+          <a onclick="showScreen('screen-home'); switchTab('channels');">← Channels</a>
+          <span class="sep">/</span>
+          <a onclick="showScreen('screen-versions')">Pre-Arrival Email</a>
+          <span class="sep">/</span>
+          <span style="color:var(--text);font-weight:500;">New Version</span>
+        </div>
+        <div class="context-strip">
+          <div class="context-icon"><svg width="16" height="16" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8h20"/></svg></div>
+          <div>
+            <div class="context-label">New Version For</div>
+            <div class="context-name">Pre-Arrival Email · JW Marriott Houston Downtown</div>
+          </div>
+        </div>
+        <div class="thread" id="email-thread"></div>
+      </div>
+    </div>
+
+    <!-- ====================================================
+         SCREEN: ANALYZING
+         ==================================================== -->
+    <div id="screen-analyzing" class="screen">
+      <div class="analyzing-wrap">
+        <div class="analyzing-title">Building your email</div>
+        <div class="analyzing-sub">Searching the content library for the best match…</div>
+        <div class="steps-box">
+          <div class="step-row" id="s1"><div class="step-icon" id="si1"></div>Reading guest persona and trip type</div>
+          <div class="step-row" id="s2"><div class="step-icon" id="si2"></div>Searching amenity library for Individual Business matches</div>
+          <div class="step-row" id="s3"><div class="step-icon" id="si3"></div>Executive Meeting Package ✦ found — added to version</div>
+          <div class="step-row" id="s4"><div class="step-icon" id="si4"></div>Default block selected to fill remaining slot</div>
+        </div>
+        <div class="summary-box" id="summary-box">
+          <div class="summary-eyebrow">Content selected for this version</div>
+          <div class="summary-row">
+            <div class="sum-badges"><span class="sum-badge ind">Individual</span><span class="sum-badge biz">Business</span><span class="sum-badge new">✦ New</span></div>
+            <div><div class="sum-name">Executive Meeting Package</div><div class="sum-desc">Private meeting rooms with AV support — created in Part 1</div></div>
+          </div>
+          <div class="summary-row">
+            <div class="sum-badges"><span class="sum-badge ind">Individual</span><span class="sum-badge biz">Business</span></div>
+            <div><div class="sum-name">Airport Transfer Service</div><div class="sum-desc">Complimentary transfer for business guests arriving at IAH or HOU</div></div>
+          </div>
+          <div class="summary-row">
+            <div class="sum-badges"><span class="sum-badge def">Default</span></div>
+            <div><div class="sum-name">Spa &amp; Wellness</div><div class="sum-desc">Complimentary access for all guests</div></div>
+          </div>
+        </div>
+        <button class="view-btn" id="view-btn" onclick="showScreen('screen-email')">View your email →</button>
+      </div>
+    </div>
+
+    <!-- ====================================================
+         SCREEN: EMAIL PREVIEW (with editing panel)
+         ==================================================== -->
+    <div id="screen-email" class="screen">
+      <div class="email-wrap">
+        <div class="breadcrumb" style="margin-bottom:16px;">
+          <a onclick="showScreen('screen-home'); switchTab('channels');">← Channels</a>
+          <span class="sep">/</span>
+          <a onclick="showScreen('screen-versions')">Pre-Arrival Email</a>
+          <span class="sep">/</span>
+          <span style="color:var(--text);font-weight:500;">Individual Business Guest Version</span>
+        </div>
+
+        <!-- Full-width persona tabs -->
+        <div class="persona-tab-bar">
+          <button class="ptab-btn active" id="ptab-individual" onclick="switchPersona('individual')">Individual Business Guest</button>
+          <button class="ptab-btn inactive" id="ptab-default" onclick="switchPersona('default')">Default Guest</button>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div style="font-size:12px;color:var(--text-light);font-style:italic;" id="persona-context">Individual Business version — content matched to individual business travelers.</div>
+        </div>
+
+        <!-- Email frame + editing panel -->
+        <div class="email-editing-row">
+          <!-- Email frame -->
+          <div class="email-frame" id="email-frame">
+            <div class="email-hero" id="hero-content" style="background:linear-gradient(155deg,#7a9280 0%,#4a6b5c 45%,#2e4e44 100%);">
+              <div class="bbadge-row"><span class="bbadge biz" id="badge-hero">Business Hero</span></div>
+              <div class="hero-h" id="hero-h">Your next chapter awaits.</div>
+              <div class="hero-p" id="hero-p">Everything is set for your business stay in Houston.</div>
+            </div>
+            <div class="email-section">
+              <div class="email-section-label">Introduction</div>
+              <div class="email-intro" id="intro-text">We've prepared your stay at JW Marriott Houston Downtown. From a fully equipped workspace to curated business services, everything is in place for a productive trip.</div>
+            </div>
+            <div class="email-section">
+              <div class="email-section-label">Your Amenities</div>
+              <div class="email-amenity">
+                <div class="bbadge-row" id="badges-a1"><span class="bbadge biz">Individual Business</span><span class="bbadge new-b">✦ New</span></div>
+                <div class="amenity-name" id="name-a1">Executive Meeting Package</div>
+                <div class="amenity-desc" id="desc-a1">Private meeting rooms with AV support, high-speed connectivity, and catering on request.</div>
+              </div>
+              <div class="email-amenity">
+                <div class="bbadge-row" id="badges-a2"><span class="bbadge biz">Individual Business</span></div>
+                <div class="amenity-name" id="name-a2">Airport Transfer Service</div>
+                <div class="amenity-desc" id="desc-a2">Complimentary transfer for business guests arriving at IAH or HOU.</div>
+              </div>
+              <div class="email-amenity">
+                <div class="bbadge-row" id="badges-a3"><span class="bbadge def">Default</span></div>
+                <div class="amenity-name" id="name-a3">Spa &amp; Wellness</div>
+                <div class="amenity-desc" id="desc-a3">Complimentary access for all guests.</div>
+              </div>
+            </div>
+            <div class="email-section">
+              <button class="email-cta-btn" id="cta-text">View Your Business Itinerary</button>
+            </div>
+          </div>
+
+          <!-- Editing panel -->
+          <div class="editing-panel">
+            <div class="ep-header">
+              <div class="ep-collapse">&gt;&gt;</div>
+              <div class="ep-title">Content Editing</div>
+            </div>
+
+            <!-- Header Content -->
+            <div class="ep-section">
+              <div class="ep-section-hdr" onclick="toggleEpSection(this)">
+                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="var(--text-light)" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg></div>
+                <div class="ep-section-info"><div class="ep-section-label">Header Content</div><div class="ep-section-sub">Choose the guest's loyalty tier</div></div>
+                <span class="ep-chevron">▾</span>
+              </div>
+            </div>
+
+            <!-- Hero Image -->
+            <div class="ep-section">
+              <div class="ep-section-hdr" onclick="toggleEpSection(this)">
+                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="var(--text-light)" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+                <div class="ep-section-info"><div class="ep-section-label">Hero Image</div><div class="ep-section-sub">Individual or group reservation</div></div>
+                <span class="ep-chevron">▾</span>
+              </div>
+            </div>
+
+            <!-- Body Content 1 — EXPANDED -->
+            <div class="ep-section">
+              <div class="ep-section-hdr" onclick="toggleEpSection(this)">
+                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="var(--accent)" stroke-width="1.8" viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></div>
+                <div class="ep-section-info"><div class="ep-section-label" style="color:var(--accent);">Body Content 1</div><div class="ep-section-sub">Intro paragraph for this persona</div></div>
+                <span class="ep-chevron" style="color:var(--accent);">▴</span>
+              </div>
+              <div class="ep-body open">
+                <div class="ep-field-label">
+                  <span class="ep-label-text">Description</span>
+                  <span class="ep-char-count">38 of 186 characters remaining</span>
+                </div>
+                <textarea class="ep-textarea" rows="4">We've prepared your stay at JW Marriott Houston Downtown. From a fully equipped workspace to curated business services, everything is in place for a productive trip.</textarea>
+                <div class="ep-actions">
+                  <button class="ep-revert">Revert</button>
+                  <button class="ep-generate" onclick="runGenerate(this)">
+                    <svg width="12" height="12" fill="white" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+                    Generate
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Amenities -->
+            <div class="ep-section">
+              <div class="ep-section-hdr" onclick="toggleEpSection(this)">
+                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="var(--text-light)" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+                <div class="ep-section-info"><div class="ep-section-label">Amenities</div><div class="ep-section-sub">3 blocks selected for this version</div></div>
+                <span class="ep-chevron">▾</span>
+              </div>
+            </div>
+
+            <!-- Body Content 2 -->
+            <div class="ep-section">
+              <div class="ep-section-hdr" onclick="toggleEpSection(this)">
+                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="var(--text-light)" stroke-width="1.8" viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></div>
+                <div class="ep-section-info"><div class="ep-section-label">Body Content 2</div><div class="ep-section-sub">Select a date to preview</div></div>
+                <span class="ep-chevron">▾</span>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="ep-section">
+              <div class="ep-section-hdr" onclick="toggleEpSection(this)">
+                <div class="ep-icon"><svg width="14" height="14" fill="none" stroke="var(--text-light)" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15h18"/></svg></div>
+                <div class="ep-section-info"><div class="ep-section-label">Footer</div><div class="ep-section-sub">Legal, contact, unsubscribe</div></div>
+                <span class="ep-chevron">▾</span>
+              </div>
+            </div>
+          </div><!-- /editing-panel -->
+        </div><!-- /email-editing-row -->
+
+        <div class="exit-bar">
+          <button class="exit-back" onclick="showScreen('screen-versions')">← Back to Versions</button>
+          <button class="exit-fwd" onclick="showHandoff()">
+            Submit for Approval
+            <svg width="13" height="13" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div><!-- /screen-email -->
+
+    <!-- ====================================================
+         SCREEN: AMENITY CHAT
+         ==================================================== -->
+    <div id="screen-chat-amenity" class="screen">
+      <div class="chat-wrap">
+        <div class="breadcrumb" style="margin-bottom:24px;">
+          <a onclick="showScreen('screen-home'); switchTab('content-library');">← Content Library</a>
+          <span class="sep">/</span>
+          <span style="color:var(--text);font-weight:500;">New Amenity</span>
+        </div>
+        <div class="context-strip">
+          <div class="context-icon"><svg width="16" height="16" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <div>
+            <div class="context-label">Creating a new amenity</div>
+            <div class="context-name">Amenity Library · JW Marriott Houston Downtown</div>
+          </div>
+        </div>
+        <div class="thread" id="amenity-thread"></div>
+      </div>
+    </div>
+
+  </div><!-- /.main-content -->
+</div><!-- /.page-layout -->
+
+<div class="toast" id="toast">
+  <svg width="15" height="15" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+  <span id="toast-msg">Submitted for approval</span>
+</div>
+
+<script>
+  // ===== FLOW STATE =====
+  var currentFlow = 'none'; // 'amenity' | 'email'
+
+  var spAmenityData = [
+    {
+      step:'Step 1 of 3', title:'The amenity content library',
+      narrative:'Mary starts in the Content Library tab. She can see every amenity in the system — who it shows to, which channels it\'s live in, and which email versions it\'s tied to.',
+      callouts:[
+        {l:'A', t:'<strong>Stats bar</strong> gives a stakeholder-ready snapshot — no need to open anything.'},
+        {l:'B', t:'<strong>Attribute filters</strong> build a persona on the fly — select Level, Traveler, Season, History, and Type.'},
+        {l:'C', t:'<strong>Create New Amenity</strong> launches the AI-assisted creation flow.'}
+      ],
+      next:'Click <strong>Create New Amenity</strong> to begin.',
+      screen:'screen-home', tab:'content-library'
+    },
+    {
+      step:'Step 2 of 3', title:'Tell the AI about the amenity',
+      narrative:'Instead of filling a form, Mary describes the amenity in her own words. The AI extracts what it can — name, audience, conditions — and asks only what\'s missing.',
+      callouts:[
+        {l:'A', t:'<strong>Open-ended prompt</strong> — Mary describes the amenity naturally, no dropdowns required.'},
+        {l:'B', t:'The AI <strong>asks follow-up questions</strong> only when it needs clarification.'},
+        {l:'C', t:'Mary can <strong>skip any question</strong> that doesn\'t apply to this amenity.'}
+      ],
+      next:'Click the <strong>suggested prompt</strong> to fill the input, then click Send.',
+      screen:'screen-chat-amenity'
+    },
+    {
+      step:'Step 3 of 3', title:'Amenity saved to the library',
+      narrative:'The Executive Meeting Package is now in the library with its conditions set. In Part 2, it will surface automatically when Mary creates an email for Individual Business travelers.',
+      callouts:[
+        {l:'A', t:'<strong>✦ New badge</strong> marks the newly created amenity in the library.'},
+        {l:'B', t:'Conditions are stored as readable rules — not hidden logic.'},
+        {l:'C', t:'The amenity is immediately available across all connected channels.'}
+      ],
+      next:'Continue to <strong>Part 2</strong> to see the amenity appear in an email.',
+      screen:'screen-home', tab:'content-library'
+    }
+  ];
+
+  var spEmailData = [
+    {
+      step:'Step 1 of 4', title:'The channels dashboard',
+      narrative:'Mary is back on the Channels tab. Every guest touchpoint is visible here — email, lobby screens, and what\'s coming. The Pre-Arrival Email is the focus of this demo.',
+      callouts:[
+        {l:'A', t:'<strong>Channels tab</strong> shows all active and upcoming guest communication channels.'},
+        {l:'B', t:'<strong>Reuse tags</strong> on the Pre-Arrival Email card show content already flowing to Lobby Screens.'},
+        {l:'C', t:'<strong>Content Library tab</strong> shows the amenity library — including what Mary built in Part 1.'}
+      ],
+      next:'Click <strong>Manage</strong> on the Pre-Arrival Email card.',
+      screen:'screen-home', tab:'channels'
+    },
+    {
+      step:'Step 2 of 4', title:'All versions in one place',
+      narrative:'Manage opens the versions dashboard. Every audience version — active, draft, or archived — is visible here. Mary creates a new one for Individual Business travelers.',
+      callouts:[
+        {l:'A', t:'<strong>Three versions</strong> already exist — Default, Individual Business, and a Leisure draft.'},
+        {l:'B', t:'<strong>+ Create New Version</strong> starts the AI-guided flow — no blank canvas, no copying.'}
+      ],
+      next:'Click <strong>+ Create New Version</strong> to begin.',
+      screen:'screen-versions'
+    },
+    {
+      step:'Step 3 of 4', title:'A conversation, not a form',
+      narrative:'Two questions. Mary selects the audience and trip type — the system does the rest. It automatically finds the Executive Meeting Package from Part 1.',
+      callouts:[
+        {l:'A', t:'<strong>Individual travelers</strong> is the guided selection — the chip glows to guide the demo.'},
+        {l:'B', t:'The system matches the <strong>Executive Meeting Package</strong> from Part 1 automatically.'}
+      ],
+      next:'Select <strong>Individual travelers → Business</strong>, then click <strong>Build my email</strong>.',
+      screen:'screen-chat-email'
+    },
+    {
+      step:'Step 4 of 4', title:'Same library, different email',
+      narrative:'The assembled email pulls the amenity from Part 1. Switch to Default Guest to show how the same library produces a completely different email — without rebuilding anything.',
+      callouts:[
+        {l:'A', t:'<strong>Individual + Business + ✦ New</strong> badges show the new amenity surfaced automatically.'},
+        {l:'B', t:'The <strong>editing panel</strong> shows every content block — and the AI Generate button for on-the-fly rewrites.'},
+        {l:'C', t:'Switch to <strong>Default Guest</strong> to show the contrast with no persona match.'}
+      ],
+      next:'Click <strong>Default Guest</strong> tab to show the contrast.',
+      screen:'screen-email'
+    }
+  ];
+
+  var spCurrent = 0;
+  var spData = [];
+
+  function setFlow(flow) {
+    currentFlow = flow;
+    if (flow === 'amenity') {
+      spData = spAmenityData;
+      document.getElementById('sp-flow-label').textContent = 'Part 1 of 2';
+      document.getElementById('sp-nav').textContent = 'MEL · Create Amenity';
+    } else if (flow === 'email') {
+      spData = spEmailData;
+      document.getElementById('sp-flow-label').textContent = 'Part 2 of 2';
+      document.getElementById('sp-nav').textContent = 'MEL · Create Email Version';
+    }
+    spCurrent = 0;
+    renderPanel(0);
+  }
+
+  function renderPanel(idx) {
+    if (!spData.length) return;
+    var s = spData[idx];
+    document.getElementById('sp-step').textContent = s.step;
+    document.getElementById('sp-title').textContent = s.title;
+    document.getElementById('sp-narrative').textContent = s.narrative;
+    document.getElementById('sp-callouts').innerHTML =
+      s.callouts.map(function(c){ return '<div class="sp-callout"><div class="sp-letter">'+c.l+'</div><div class="sp-callout-text">'+c.t+'</div></div>'; }).join('') +
+      (s.next ? '<div class="sp-next">&#8594; <strong>Next:</strong> '+s.next+'</div>' : '');
+    // Dots
+    var dots = '';
+    for (var i=0; i<spData.length; i++) {
+      dots += '<div class="sp-dot'+(i<idx?' done':i===idx?' active':'')+'" onclick="spGoTo('+i+')"></div>';
+    }
+    document.getElementById('sp-dots').innerHTML = dots;
+  }
+
+  function spGoTo(idx) {
+    spCurrent = idx;
+    renderPanel(idx);
+    var s = spData[idx];
+    showScreenRaw(s.screen);
+    if (s.tab) switchTab(s.tab);
+  }
+
+  // ===== ENTRY FLOW STARTERS =====
+  function startAmenityFlow() {
+    setFlow('amenity');
+    showScreenRaw('screen-home');
+    switchTab('content-library');
+  }
+
+  function startEmailFlow() {
+    setFlow('email');
+    showScreenRaw('screen-home');
+    switchTab('channels');
+  }
+
+  function goHome() {
+    currentFlow = 'none';
+    spData = [];
+    document.getElementById('sp-step').textContent = '—';
+    document.getElementById('sp-title').textContent = 'Choose a use case to begin';
+    document.getElementById('sp-narrative').textContent = 'Select Part 1 or Part 2 from the demo home screen to start the story.';
+    document.getElementById('sp-callouts').innerHTML = '';
+    document.getElementById('sp-dots').innerHTML = '';
+    document.getElementById('sp-flow-label').textContent = 'Demo Flow';
+    showScreenRaw('screen-entry');
+  }
+
+  // ===== SCREEN MANAGEMENT =====
+  function showScreenRaw(id) {
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function showScreen(id) {
+    showScreenRaw(id);
+    // Sync story panel
+    for (var i=0; i<spData.length; i++) {
+      if (spData[i].screen === id && i !== spCurrent) {
+        spCurrent = i; renderPanel(i); break;
+      }
+    }
+  }
+
+  // ===== TAB SWITCH =====
+  function switchTab(tab) {
+    var isChannels = tab === 'channels';
+    document.getElementById('nav-channels').classList.toggle('active', isChannels);
+    document.getElementById('nav-content-library').classList.toggle('active', !isChannels);
+    document.getElementById('pane-channels').classList.toggle('active', isChannels);
+    document.getElementById('pane-content-library').classList.toggle('active', !isChannels);
+    // Sync story panel if in amenity flow
+    if (!isChannels && currentFlow === 'amenity') {
+      spCurrent = 0; renderPanel(0);
+    }
+  }
+
+  // ===== ATTRIBUTE FILTER DROPDOWNS =====
+  var openDD = null;
+  function toggleDD(name, e) {
+    e && e.stopPropagation();
+    var panel = document.getElementById('afp-' + name);
+    if (openDD && openDD !== name) {
+      document.getElementById('afp-' + openDD).classList.remove('open');
+    }
+    panel.classList.toggle('open');
+    openDD = panel.classList.contains('open') ? name : null;
+  }
+  document.addEventListener('click', function(e) {
+    if (openDD && !e.target.closest('.af-group')) {
+      document.getElementById('afp-' + openDD).classList.remove('open');
+      openDD = null;
+    }
+  });
+
+  function onFilterChange() {
+    var groups = ['level', 'traveler', 'season', 'history', 'type'];
+    var groupLabels = { level:'Level', traveler:'Traveler', season:'Season', history:'History', type:'Type' };
+    var selections = {};
+    var anySelected = false;
+
+    groups.forEach(function(g) {
+      var checked = Array.from(document.querySelectorAll('input[data-group="'+g+'"]:checked')).map(function(cb){ return cb.value; });
+      selections[g] = checked;
+      var count = document.getElementById('afc-' + g);
+      var btn = document.getElementById('afb-' + g);
+      if (checked.length) {
+        anySelected = true;
+        count.textContent = checked.length;
+        count.style.display = '';
+        btn.classList.add('has-sel');
+      } else {
+        count.style.display = 'none';
+        btn.classList.remove('has-sel');
+      }
+    });
+
+    // Update persona preview bar
+    var bar = document.getElementById('persona-preview-bar');
+    var attrs = document.getElementById('ppb-attrs');
+    if (anySelected) {
+      bar.classList.add('show');
+      var html = '';
+      groups.forEach(function(g) {
+        if (selections[g].length) {
+          html += '<div class="ppb-pair"><span class="ppb-cat">'+groupLabels[g]+':</span>';
+          selections[g].forEach(function(v){ html += '<span class="ppb-chip">'+v+'</span>'; });
+          html += '</div>';
+        }
+      });
+      attrs.innerHTML = html;
+    } else {
+      bar.classList.remove('show');
+    }
+
+    // Clear button
+    document.getElementById('af-clear-btn').style.display = anySelected ? '' : 'none';
+
+    // Filter amenity cards
+    var cards = document.querySelectorAll('#pane-content-library .ac');
+    cards.forEach(function(card) {
+      if (!anySelected) { card.classList.remove('filtered-out'); return; }
+      var match = false;
+      if (selections.traveler.length) {
+        var t = (card.getAttribute('data-traveler') || '').split(',');
+        if (selections.traveler.some(function(v){ return t.includes(v.toLowerCase()); })) match = true;
+      }
+      if (selections.type.length) {
+        var ty = (card.getAttribute('data-type') || '').split(',');
+        if (selections.type.some(function(v){ return ty.includes(v.toLowerCase()); })) match = true;
+      }
+      if (selections.history.length) {
+        var h = (card.getAttribute('data-history') || '').split(',');
+        if (selections.history.some(function(v){ return h.includes(v.toLowerCase().replace(' ', '-')); })) match = true;
+      }
+      if (selections.season.length) {
+        var s = (card.getAttribute('data-season') || '').split(',');
+        if (selections.season.some(function(v){ return s.includes(v.toLowerCase()); })) match = true;
+      }
+      if (!selections.traveler.length && !selections.type.length && !selections.history.length && !selections.season.length) match = true;
+      card.classList.toggle('filtered-out', !match);
+    });
+  }
+
+  function clearAllFilters() {
+    document.querySelectorAll('#pane-content-library input[type=checkbox]').forEach(function(cb){ cb.checked = false; });
+    onFilterChange();
+  }
+
+  // ===== AMENITY CHAT =====
+  // Captured choices from amenity chat
+  var amenityChoices = { availability: null, tier: null };
+
+  function goToAmenityChat() {
+    amenityChoices = { availability: null, tier: null };
+    showScreenRaw('screen-chat-amenity');
+    document.getElementById('amenity-thread').innerHTML = '';
+    if (currentFlow === 'amenity') { spCurrent = 1; renderPanel(1); }
+    setTimeout(startAmenityChat, 150);
+  }
+
+  function addAmenitySys(html) {
+    var t = document.getElementById('amenity-thread');
+    var m = document.createElement('div'); m.className = 'msg sys';
+    m.innerHTML = '<div class="bubble">' + html + '</div>';
+    t.appendChild(m); m.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+  function addAmenityUsr(text) {
+    var t = document.getElementById('amenity-thread');
+    var m = document.createElement('div'); m.className = 'msg usr';
+    m.innerHTML = '<div class="bubble">' + text + '</div>';
+    t.appendChild(m);
+  }
+  function addAmenityChips(opts, cb) {
+    var t = document.getElementById('amenity-thread');
+    var row = document.createElement('div'); row.className = 'chips-row';
+    opts.forEach(function(o) {
+      var c = document.createElement('button');
+      c.className = 'chip';
+      c.textContent = o.label;
+      c.onclick = function() { row.remove(); cb(o); };
+      row.appendChild(c);
+    });
+    t.appendChild(row); row.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+
+  function startAmenityChat() {
+    setTimeout(function() {
+      addAmenitySys("Tell me about this amenity. The more detail you share, the better I can set the conditions automatically.");
+      setTimeout(showAmenityInput, 400);
+    }, 280);
+  }
+
+  function showAmenityInput() {
+    var t = document.getElementById('amenity-thread');
+    var wrap = document.createElement('div');
+    wrap.id = 'amenity-input-wrap';
+    wrap.className = 'amenity-textarea-wrap';
+    wrap.innerHTML = '<textarea class="amenity-textarea" id="amenity-ta" placeholder="e.g. Executive Meeting Package — private rooms with AV and catering for business guests..."></textarea>' +
+      '<div class="amenity-suggest"><span class="suggest-label">Try this example →</span>' +
+      '<button class="suggest-chip" onclick="fillAndSendAmenity()">Executive Meeting Package</button>' +
+      '</div>' +
+      '<button class="amenity-send" onclick="sendAmenityFreeform()" style="margin-top:12px;">Send <svg width="13" height="13" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>';
+    t.appendChild(wrap); wrap.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+
+  function fillAndSendAmenity() {
+    document.getElementById('amenity-ta').value = 'Executive Meeting Package — private meeting rooms with AV and catering for business guests';
+    setTimeout(sendAmenityFreeform, 400);
+  }
+
+  function sendAmenityFreeform() {
+    var ta = document.getElementById('amenity-ta');
+    var text = ta ? (ta.value || 'Executive Meeting Package — private meeting rooms with AV and catering for business guests') : 'Executive Meeting Package — private meeting rooms with AV and catering for business guests';
+    var wrap = document.getElementById('amenity-input-wrap');
+    if (wrap) wrap.remove();
+    addAmenityUsr(text);
+    setTimeout(function() {
+      addAmenitySys("Got it — an <strong>Executive Meeting Package</strong> for Individual Business guests. I'll set a couple of conditions to make sure it reaches the right people.");
+      setTimeout(function() {
+        addAmenitySys("When should this amenity be available?");
+        setTimeout(function() {
+          addAmenityChips([
+            {label:'Year-round'}, {label:'Weekdays only'}, {label:'Spring & Summer'}, {label:'Fall & Winter'}, {label:'Skip'}
+          ], function(o) {
+            amenityChoices.availability = o.label === 'Skip' ? null : o.label;
+            addAmenityUsr(o.label);
+            setTimeout(function() {
+              addAmenitySys("Is there a minimum Bonvoy tier?");
+              setTimeout(function() {
+                addAmenityChips([
+                  {label:'No minimum'}, {label:'Silver & above'}, {label:'Gold & above'}, {label:'Elite only'}, {label:'Skip'}
+                ], function(o2) {
+                  amenityChoices.tier = (o2.label === 'Skip' || o2.label === 'No minimum') ? null : o2.label;
+                  addAmenityUsr(o2.label);
+                  setTimeout(function() {
+                    var condSummary = buildCondSummary();
+                    addAmenitySys('<strong>Executive Meeting Package</strong> is ready. Conditions set: Individual · Business' + condSummary + '.');
+                    setTimeout(showAmenitySaveButton, 350);
+                  }, 400);
+                });
+              }, 320);
+            }, 520);
+          });
+        }, 500);
+      }, 420);
+    }, 750);
+  }
+
+  // Build a readable summary string from captured choices
+  function buildCondSummary() {
+    var parts = [];
+    if (amenityChoices.availability) parts.push(amenityChoices.availability);
+    if (amenityChoices.tier) parts.push(amenityChoices.tier);
+    return parts.length ? ' · ' + parts.join(' · ') : '';
+  }
+
+  // Build the cond-chips HTML from captured choices
+  function buildCondChips() {
+    var html = '<span class="ccx type">Individual</span><span class="ccx type">Business</span>';
+    if (amenityChoices.availability && amenityChoices.availability !== 'Year-round') {
+      html += '<span class="ccx season">' + amenityChoices.availability + '</span>';
+    }
+    if (amenityChoices.tier) {
+      html += '<span class="ccx level">' + amenityChoices.tier + '</span>';
+    }
+    return html;
+  }
+
+  function showAmenitySaveButton() {
+    var t = document.getElementById('amenity-thread');
+    var wrap = document.createElement('div'); wrap.style.animation = 'msgIn 0.28s ease';
+    wrap.innerHTML = '<button class="build-btn" onclick="saveAmenity()">Save to library <svg width="15" height="15" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>';
+    t.appendChild(wrap); wrap.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+
+  function saveAmenity() {
+    // Write the actual choices back to the card
+    var chipsEl = document.querySelector('#ac-exec-meeting .cond-chips');
+    if (chipsEl) chipsEl.innerHTML = buildCondChips();
+    if (currentFlow === 'amenity') { spCurrent = 2; renderPanel(2); }
+    showScreenRaw('screen-home');
+    switchTab('content-library');
+    showToast('Amenity saved to library ✦', 2800);
+  }
+
+  // ===== EMAIL CHAT =====
+  function goToEmailChat() {
+    showScreenRaw('screen-chat-email');
+    document.getElementById('email-thread').innerHTML = '';
+    if (currentFlow === 'email') { spCurrent = 2; renderPanel(2); }
+    setTimeout(startEmailChat, 150);
+  }
+
+  function addEmailSys(html) {
+    var t = document.getElementById('email-thread');
+    var m = document.createElement('div'); m.className = 'msg sys';
+    m.innerHTML = '<div class="bubble">' + html + '</div>';
+    t.appendChild(m); m.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+  function addEmailUsr(text) {
+    var t = document.getElementById('email-thread');
+    var m = document.createElement('div'); m.className = 'msg usr';
+    m.innerHTML = '<div class="bubble">' + text + '</div>';
+    t.appendChild(m);
+  }
+  function addEmailChips(opts, cb, guideIdx) {
+    var t = document.getElementById('email-thread');
+    var row = document.createElement('div'); row.className = 'chips-row';
+    opts.forEach(function(o, i) {
+      var c = document.createElement('button');
+      c.className = 'chip' + (i === guideIdx ? ' guide' : '');
+      c.textContent = o.label;
+      c.onclick = function() { row.remove(); cb(o); };
+      row.appendChild(c);
+    });
+    t.appendChild(row); row.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+
+  function startEmailChat() {
+    setTimeout(function() {
+      addEmailSys("Let's build your new Pre-Arrival Email. Who is this version for?");
+      setTimeout(function() {
+        addEmailChips(
+          [{label:'Individual travelers', val:'individual'}, {label:'Group travelers', val:'group'}],
+          function(o) {
+            addEmailUsr(o.label);
+            setTimeout(function() {
+              addEmailSys("What's the main purpose of their trip?");
+              setTimeout(function() {
+                addEmailChips(
+                  [{label:'Business', val:'business'}, {label:'Leisure', val:'leisure'}],
+                  function(o2) {
+                    addEmailUsr(o2.label);
+                    setTimeout(function() {
+                      addEmailSys('Perfect. I\'ll pull together the right content for <strong>'+o.label+' — '+o2.label+'</strong>.');
+                      setTimeout(function() {
+                        var t = document.getElementById('email-thread');
+                        var wrap = document.createElement('div'); wrap.style.animation = 'msgIn 0.28s ease';
+                        wrap.innerHTML = '<button class="build-btn" onclick="runAnalysis()">Build my email <svg width="15" height="15" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>';
+                        t.appendChild(wrap); wrap.scrollIntoView({behavior:'smooth', block:'nearest'});
+                      }, 350);
+                    }, 500);
+                  }, 0 // guide index 0 = Business
+                );
+              }, 320);
+            }, 520);
+          }, 0 // guide index 0 = Individual travelers
+        );
+      }, 420);
+    }, 280);
+  }
+
+  // ===== ANALYSIS =====
+  function runAnalysis() {
+    showScreenRaw('screen-analyzing');
+    [1,2,3,4].forEach(function(n) {
+      var row = document.getElementById('s'+n), ico = document.getElementById('si'+n);
+      row.className = 'step-row'; ico.className = 'step-icon'; ico.innerHTML = '';
+    });
+    document.getElementById('summary-box').classList.remove('vis');
+    document.getElementById('view-btn').classList.remove('vis');
+    var times = [{s:180,d:620},{s:700,d:1120},{s:1200,d:1640},{s:1750,d:2180}];
+    times.forEach(function(tm, i) {
+      var n = i+1;
+      setTimeout(function() { document.getElementById('s'+n).classList.add('vis'); document.getElementById('si'+n).classList.add('spin'); }, tm.s);
+      setTimeout(function() {
+        var ico = document.getElementById('si'+n);
+        ico.classList.remove('spin'); ico.classList.add('done');
+        ico.innerHTML = '<svg width="10" height="10" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>';
+        document.getElementById('s'+n).classList.add('done-row');
+        if (n===4) { setTimeout(function() { document.getElementById('summary-box').classList.add('vis'); setTimeout(function() { document.getElementById('view-btn').classList.add('vis'); }, 450); }, 300); }
+      }, tm.d);
+    });
+  }
+
+  // ===== PERSONA SWITCHER (Email Preview) =====
+  var personas = {
+    individual: {
+      heroBg: 'linear-gradient(155deg,#7a9280 0%,#4a6b5c 45%,#2e4e44 100%)',
+      heroH: 'Your next chapter awaits.', heroP: 'Everything is set for your business stay in Houston.',
+      badgeHero: 'Business Hero', heroClass: 'biz',
+      intro: "We've prepared your stay at JW Marriott Houston Downtown. From a fully equipped workspace to curated business services, everything is in place for a productive trip.",
+      a1: { badges: '<span class="bbadge biz">Individual Business</span><span class="bbadge new-b">✦ New</span>', name:'Executive Meeting Package', desc:'Private meeting rooms with AV support, high-speed connectivity, and catering on request.' },
+      a2: { badges: '<span class="bbadge biz">Individual Business</span>', name:'Airport Transfer Service', desc:'Complimentary transfer for business guests arriving at IAH or HOU.' },
+      a3: { badges: '<span class="bbadge def">Default</span>', name:'Spa & Wellness', desc:'Complimentary access for all guests.' },
+      cta: 'View Your Business Itinerary',
+      ctx: 'Individual Business version — content matched to individual business travelers.'
+    },
+    default: {
+      heroBg: 'linear-gradient(155deg,#aaa 0%,#777 100%)',
+      heroH: 'Welcome to JW Marriott Houston Downtown.', heroP: 'We look forward to your stay.',
+      badgeHero: 'Default Hero', heroClass: 'std',
+      intro: "Welcome to JW Marriott Houston Downtown. We've prepared everything for a comfortable stay. Our team is ready to assist you with anything you need.",
+      a1: { badges: '<span class="bbadge def">Default</span>', name:'Spa & Wellness', desc:'A full-service spa with signature treatments and rooftop access.' },
+      a2: { badges: '<span class="bbadge def">Default</span>', name:'Dining & Bar', desc:'Seasonal menus crafted with local ingredients, available daily.' },
+      a3: { badges: '<span class="bbadge def">Default</span>', name:'Concierge Services', desc:'Our team is here to help plan your stay and local experiences.' },
+      cta: 'View Your Itinerary',
+      ctx: 'Default email — no persona match. All blocks are standard defaults. No business-specific content surfaces.'
+    }
+  };
+
+  function switchPersona(p) {
+    var d = personas[p];
+    document.getElementById('ptab-individual').className = 'ptab-btn ' + (p==='individual'?'active':'inactive');
+    document.getElementById('ptab-default').className = 'ptab-btn ' + (p==='default'?'active':'inactive');
+    document.getElementById('persona-context').textContent = d.ctx;
+    document.getElementById('hero-content').style.background = d.heroBg;
+    document.getElementById('hero-h').textContent = d.heroH;
+    document.getElementById('hero-p').textContent = d.heroP;
+    document.getElementById('badge-hero').textContent = d.badgeHero;
+    document.getElementById('badge-hero').className = 'bbadge ' + d.heroClass;
+    document.getElementById('intro-text').textContent = d.intro;
+    ['a1','a2','a3'].forEach(function(k) {
+      var a = d[k];
+      document.getElementById('badges-'+k).innerHTML = a.badges;
+      document.getElementById('name-'+k).textContent = a.name;
+      document.getElementById('desc-'+k).textContent = a.desc;
+    });
+    document.getElementById('cta-text').textContent = d.cta;
+    var f = document.getElementById('email-frame');
+    f.style.opacity = '0'; f.style.transform = 'translateY(6px)';
+    setTimeout(function() { f.style.opacity = '1'; f.style.transform = 'translateY(0)'; }, 60);
+  }
+
+  // ===== EDITING PANEL ACCORDION =====
+  function toggleEpSection(hdr) {
+    var section = hdr.parentElement;
+    var body = section.querySelector('.ep-body');
+    if (!body) return;
+    var chevron = hdr.querySelector('.ep-chevron');
+    var isOpen = body.classList.toggle('open');
+    if (chevron) chevron.textContent = isOpen ? '▴' : '▾';
+  }
+
+  // ===== TOAST =====
+  function showToast(msg, duration) {
+    var t = document.getElementById('toast');
+    if (msg) document.getElementById('toast-msg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, duration || 2800);
+  }
+
+  function showHandoff() { showToast('Submitted for approval', 2800); }
+
+  // ===== GENERATE (fake streaming) =====
+  function runGenerate(btn) {
+    var ta = btn.closest('.ep-body').querySelector('.ep-textarea');
+    if (!ta) return;
+    btn.disabled = true;
+    btn.textContent = 'Writing…';
+    ta.style.color = 'var(--text-faint)';
+    ta.value = '';
+    var text = "We've arranged everything for a seamless business stay at JW Marriott Houston Downtown — from dedicated workspace to curated services designed for working travelers.";
+    var i = 0;
+    var interval = setInterval(function() {
+      ta.value += text[i];
+      i++;
+      if (i >= text.length) {
+        clearInterval(interval);
+        ta.style.color = 'var(--text)';
+        btn.disabled = false;
+        btn.innerHTML = '<svg width="12" height="12" fill="white" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg> Regenerate';
+      }
+    }, 18);
+  }
+
+  // ===== INIT =====
+  // No flow selected on load
+</script>
+</body>
+</html>
