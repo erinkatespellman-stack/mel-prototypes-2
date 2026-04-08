@@ -207,7 +207,7 @@
     .amenity-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
     .ac { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--bg); cursor: pointer; transition: border-color 0.15s, opacity 0.2s; display: flex; flex-direction: column; height: 320px; }
     .ac:hover { border-color: #aaa; }
-    .ac.filtered-out { display: none; }
+    .ac.filtered-out, .card.filtered-out { display: none; }
     .ac-thumb { height: 72px; position: relative; }
     .th-dining { background: linear-gradient(145deg, #9b7060 0%, #5a3020 100%); }
     .th-wellness { background: linear-gradient(145deg, #7a9898 0%, #3d5a5a 100%); }
@@ -578,7 +578,7 @@
             <span class="section-label">Guest Touchpoints</span>
           </div>
           <div class="cards-row">
-            <div class="card featured">
+            <div class="card featured" data-traveler="business,leisure" data-type="individual,group" data-history="returning,new" data-season="winter,spring,summer,fall">
               <div class="card-thumb thumb-warm"></div>
               <div class="card-body">
                 <div class="card-name">Pre-Arrival Email</div>
@@ -587,7 +587,7 @@
                 <button class="btn btn-manage" onclick="showScreen('screen-versions')">Manage</button>
               </div>
             </div>
-            <div class="card">
+            <div class="card" data-traveler="business,leisure" data-type="individual,group" data-history="returning,new" data-season="winter,spring,summer,fall">
               <div class="card-thumb thumb-teal"></div>
               <div class="card-body">
                 <div class="card-name">Travel Planner</div>
@@ -597,7 +597,7 @@
                 <button class="btn btn-manage" style="margin-top:2px;">Manage</button>
               </div>
             </div>
-            <div class="card">
+            <div class="card" data-traveler="leisure" data-type="individual" data-history="new" data-season="summer,spring">
               <div class="card-thumb thumb-slate"></div>
               <div class="card-body">
                 <div class="card-name">Day-Of Welcome</div>
@@ -615,7 +615,7 @@
             <span class="section-pill">3 New</span>
           </div>
           <div class="cards-row">
-            <div class="card">
+            <div class="card" data-traveler="business,leisure" data-type="individual,group" data-history="returning,new" data-season="winter,spring,summer,fall">
               <div class="card-thumb thumb-navy"></div>
               <div class="card-body">
                 <div class="card-name">Lobby Screens</div>
@@ -625,7 +625,7 @@
                 <button class="btn btn-get-started-blue" style="margin-top:12px;">Get started →</button>
               </div>
             </div>
-            <div class="card">
+            <div class="card" data-traveler="business,leisure" data-type="individual" data-history="returning,new" data-season="winter,spring,summer,fall">
               <div class="card-thumb thumb-fgrn"></div>
               <div class="card-body">
                 <div class="card-name">GRE Screens</div>
@@ -635,7 +635,7 @@
                 <button class="btn btn-get-started-green" style="margin-top:12px;">Get started →</button>
               </div>
             </div>
-            <div class="card">
+            <div class="card" data-traveler="business" data-type="individual,group" data-history="new" data-season="winter,spring,summer,fall">
               <div class="card-thumb thumb-rust"></div>
               <div class="card-body">
                 <div class="card-name">Outbound Marketing</div>
@@ -652,7 +652,7 @@
             <span class="section-label">Direct Messaging &amp; Push Notifications</span>
           </div>
           <div class="cards-row">
-            <div class="card">
+            <div class="card" data-traveler="business,leisure" data-type="individual,group" data-history="returning,new" data-season="winter,spring,summer,fall">
               <div class="card-thumb thumb-wapp"></div>
               <div class="card-body">
                 <div class="card-name">WhatsApp</div>
@@ -662,7 +662,7 @@
                 <button class="btn btn-coming-soon" disabled style="margin-top:12px;">Coming Soon</button>
               </div>
             </div>
-            <div class="card">
+            <div class="card" data-traveler="business,leisure" data-type="individual" data-history="returning" data-season="winter,spring,summer,fall">
               <div class="card-thumb thumb-push"></div>
               <div class="card-body">
                 <div class="card-name">Push Notifications</div>
@@ -1369,10 +1369,13 @@
     // Clear button
     document.getElementById('af-clear-btn').style.display = anySelected ? '' : 'none';
 
-    // Filter amenity cards
-    var cards = document.querySelectorAll('#pane-content-library .ac');
+    // Filter amenity + channel cards
+    var cards = document.querySelectorAll('#pane-content-library .ac, #pane-channels .card');
     cards.forEach(function(card) {
       if (!anySelected) { card.classList.remove('filtered-out'); return; }
+      // Channel cards with no data attributes match everything
+      var hasAttrs = card.hasAttribute('data-traveler') || card.hasAttribute('data-type') || card.hasAttribute('data-history') || card.hasAttribute('data-season') || card.hasAttribute('data-level');
+      if (!hasAttrs) { card.classList.remove('filtered-out'); return; }
       var match = false;
       if (selections.traveler.length) {
         var t = (card.getAttribute('data-traveler') || '').split(',');
@@ -1396,7 +1399,7 @@
   }
 
   function clearAllFilters() {
-    document.querySelectorAll('#pane-content-library input[type=checkbox]').forEach(function(cb){ cb.checked = false; });
+    document.querySelectorAll('#attr-filter-row input[type=checkbox]').forEach(function(cb){ cb.checked = false; });
     onFilterChange();
   }
 
